@@ -12,6 +12,11 @@ import {
   DollarSign,
   Shield,
   User,
+  ExternalLink,
+  TrendingUp,
+  Activity,
+  AlertTriangle,
+  MessageSquare,
 } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { Avatar, AvatarFallback } from '@/app/components/ui/avatar';
@@ -32,6 +37,14 @@ const NAVIGATION = [
   { id: 'nav-team', name: 'Team', href: '/app/team', icon: User },
   { id: 'nav-iam', name: 'IAM Explainer', href: '/app/iam-explainer', icon: FileJson },
   { id: 'nav-reminders', name: 'Reminders', href: '/app/reminders', icon: Bell },
+  // Multi-cloud additions
+  { id: 'nav-integrations', name: 'Integrations', href: '/app/integrations', icon: ExternalLink },
+  { id: 'nav-gcp', name: 'GCP Resources', href: '/app/gcp-resources', icon: Cloud },
+  { id: 'nav-ai-usage', name: 'AI API Usage', href: '/app/ai-usage', icon: Activity },
+  { id: 'nav-forecast', name: 'Cost Forecast', href: '/app/cost-forecast', icon: TrendingUp },
+  // AI features
+  { id: 'nav-anomalies', name: 'Anomaly Detection', href: '/app/anomalies', icon: AlertTriangle },
+  { id: 'nav-query', name: 'Cloud Query', href: '/app/cloud-query', icon: MessageSquare },
   { id: 'nav-settings', name: 'Settings', href: '/app/settings', icon: Settings },
 ];
 

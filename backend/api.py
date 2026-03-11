@@ -17,6 +17,19 @@ import jwt
 from aws_resource_scanner import AWSResourceScanner, ScanResult
 from resource_manager import ResourceActionExecutor, ActionType
 
+# Multi-cloud service imports
+try:
+    from services.gcp_scanner import GCPResourceScanner
+    from services.ai_usage_monitor import AIUsageMonitor
+    from services.cost_engine import MultiCloudCostEngine
+    from services.cost_forecasting import CostForecastingEngine
+    from services.optimization_engine import ResourceOptimizationEngine
+    from services.anomaly_detector import AnomalyDetector
+    from services.nl_query_engine import NLQueryEngine
+except ImportError as _e:
+    logger_placeholder = logging.getLogger(__name__)
+    logger_placeholder.warning(f"Some multi-cloud services could not be imported: {_e}")
+
 
 # ============================================================================
 # CONFIGURATION
@@ -434,6 +447,203 @@ def perform_bulk_action():
         }), 500
 
 
+# ============================================================================
+# MULTI-CLOUD ENDPOINTS
+# ============================================================================
+
+@app.route('/api/v1/gcp/scan', methods=['POST'])
+@require_api_key
+def scan_gcp_resources():
+    """
+    Scan Google Cloud Platform resources.
+
+    Request body:
+    {
+        "service_account_json": {...},  // GCP service account JSON object
+        "project_id": "my-gcp-project"
+    }
+    """
+    try:
+        data = request.get_json() or {}
+        service_account_info = data.get('service_account_json')
+        project_id = data.get('project_id')
+
+        scanner = GCPResourceScanner(
+            service_account_info=service_account_info,
+            project_id=project_id,
+        )
+        result = scanner.scan()
+        return jsonify(result), 200
+
+    except Exception as e:
+        logger.error(f'GCP scan error: {str(e)}')
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/v1/ai/usage', methods=['POST'])
+@require_api_key
+def get_ai_usage():
+    """
+    Get Claude AI API usage statistics.
+
+    Request body:
+    {
+        "api_key": "sk-ant-...",
+        "days": 30  // optional
+    }
+    """
+    try:
+        data = request.get_json() or {}
+        api_key = data.get('api_key')
+        days = int(data.get('days', 30))
+
+        monitor = AIUsageMonitor(api_key=api_key)
+        result = monitor.get_usage_stats(days=days)
+        return jsonify(result), 200
+
+    except Exception as e:
+        logger.error(f'AI usage error: {str(e)}')
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/v1/costs/multi-cloud', methods=['POST'])
+@require_api_key
+def get_multi_cloud_costs():
+    """
+    Get aggregated costs from all configured cloud providers.
+
+    Request body:
+    {
+        "aws_access_key": "...",
+        "aws_secret_key": "...",
+        "aws_region": "us-east-1",
+        "gcp_service_account": {...},
+        "gcp_project_id": "...",
+        "anthropic_api_key": "..."
+    }
+    """
+    try:
+        data = request.get_json() or {}
+        engine = MultiCloudCostEngine(
+            aws_access_key=data.get('aws_access_key'),
+            aws_secret_key=data.get('aws_secret_key'),
+            aws_region=data.get('aws_region', 'us-east-1'),
+            gcp_service_account=data.get('gcp_service_account'),
+            gcp_project_id=data.get('gcp_project_id'),
+            anthropic_api_key=data.get('anthropic_api_key'),
+        )
+        result = engine.get_aggregated_costs()
+        return jsonify(result), 200
+
+    except Exception as e:
+        logger.error(f'Multi-cloud cost error: {str(e)}')
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/v1/costs/forecast', methods=['POST'])
+@require_api_key
+def forecast_costs():
+    """
+    Forecast future cloud costs using linear regression.
+
+    Request body:
+    {
+        "historical_costs": [
+            {"month": "Jan", "cost": 3200},
+            {"month": "Feb", "cost": 3450},
+            ...
+        ],
+        "forecast_months": 12  // 3, 6, or 12
+    }
+    """
+    try:
+        data = request.get_json() or {}
+        historical = data.get('historical_costs', [])
+        months = int(data.get('forecast_months', 12))
+
+        engine = CostForecastingEngine()
+        result = engine.forecast(historical, forecast_months=months)
+        return jsonify(result), 200
+
+    except Exception as e:
+        logger.error(f'Cost forecast error: {str(e)}')
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/v1/optimization/recommendations', methods=['POST'])
+@require_api_key
+def get_optimization_recommendations():
+    """
+    Get cross-cloud resource optimization recommendations.
+
+    Request body (all optional - will use demo data if not provided):
+    {
+        "aws_resources": [...],
+        "gcp_resources": [...],
+        "ai_usage": {...}
+    }
+    """
+    try:
+        data = request.get_json() or {}
+        engine = ResourceOptimizationEngine()
+        result = engine.analyze(
+            aws_resources=data.get('aws_resources'),
+            gcp_resources=data.get('gcp_resources'),
+            ai_usage=data.get('ai_usage'),
+        )
+        return jsonify(result), 200
+
+    except Exception as e:
+        logger.error(f'Optimization error: {str(e)}')
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+@app.route('/api/v1/credits/status', methods=['POST'])
+@require_api_key
+def get_credits_status():
+    """
+    Get cloud credit balances and free tier usage.
+    Returns demo data - real implementations query provider billing APIs.
+    """
+    try:
+        return jsonify({
+            'success': True,
+            'credits': [
+                {
+                    'provider': 'aws',
+                    'credit_type': 'AWS Free Tier',
+                    'balance_usd': None,
+                    'free_tier_usage': [
+                        {'service': 'EC2', 'used': '750 hours', 'limit': '750 hours/month', 'pct': 92},
+                        {'service': 'S3', 'used': '4.2 GB', 'limit': '5 GB', 'pct': 84},
+                        {'service': 'Lambda', 'used': '850K requests', 'limit': '1M requests', 'pct': 85},
+                    ],
+                },
+                {
+                    'provider': 'gcp',
+                    'credit_type': 'Google Cloud Credits',
+                    'balance_usd': 285.50,
+                    'expiry': '2025-06-30',
+                    'free_tier_usage': [
+                        {'service': 'Cloud Functions', 'used': '1.2M invocations', 'limit': '2M invocations', 'pct': 60},
+                        {'service': 'Cloud Storage', 'used': '3.8 GB', 'limit': '5 GB', 'pct': 76},
+                    ],
+                },
+                {
+                    'provider': 'claude',
+                    'credit_type': 'Anthropic API Credits',
+                    'balance_usd': 150.00,
+                    'expiry': '2025-06-30',
+                },
+            ],
+            'timestamp': datetime.utcnow().isoformat(),
+        }), 200
+
+    except Exception as e:
+        logger.error(f'Credits status error: {str(e)}')
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
 @app.route('/api/v1/docs', methods=['GET'])
 def api_documentation():
     """API documentation"""
@@ -496,6 +706,58 @@ def internal_error(error):
         'success': False,
         'error': 'Internal server error',
     }), 500
+
+
+# ============================================================================
+# AI ANOMALY DETECTION
+# ============================================================================
+
+@app.route('/api/v1/anomalies/detect', methods=['POST'])
+@require_auth
+def detect_anomalies():
+    """Detect cost and usage anomalies using statistical analysis + Claude AI."""
+    try:
+        data = request.get_json() or {}
+        anthropic_key = data.get('anthropic_api_key') or os.environ.get('ANTHROPIC_API_KEY')
+        cost_history = data.get('cost_history')    # optional real data
+        resource_metrics = data.get('resource_metrics')  # optional real data
+        use_ai = data.get('use_ai_explanations', True)
+
+        detector = AnomalyDetector(anthropic_api_key=anthropic_key)
+        result = detector.detect(
+            cost_history=cost_history,
+            resource_metrics=resource_metrics,
+            use_ai_explanations=use_ai,
+        )
+        return jsonify({'success': True, 'data': result})
+    except Exception as e:
+        logger.error(f"Anomaly detection error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+
+# ============================================================================
+# NATURAL LANGUAGE CLOUD QUERY
+# ============================================================================
+
+@app.route('/api/v1/query/natural-language', methods=['POST'])
+@require_auth
+def natural_language_query():
+    """Execute a natural language cloud query powered by Claude AI."""
+    try:
+        data = request.get_json() or {}
+        question = data.get('question', '').strip()
+        if not question:
+            return jsonify({'success': False, 'error': 'question is required'}), 400
+
+        anthropic_key = data.get('anthropic_api_key') or os.environ.get('ANTHROPIC_API_KEY')
+        credentials = data.get('credentials', {})
+
+        engine = NLQueryEngine(anthropic_api_key=anthropic_key)
+        result = engine.query(question=question, credentials=credentials)
+        return jsonify({'success': True, 'data': result})
+    except Exception as e:
+        logger.error(f"NL query error: {e}")
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 # ============================================================================

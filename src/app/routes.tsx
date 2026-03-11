@@ -26,6 +26,16 @@ const ReportsPage = lazy(() => import("@/app/pages/reports-page").then(m => ({ d
 // AWS Resource Management
 const AWSResourcesPage = lazy(() => import("@/app/pages/aws-resources-page").then(m => ({ default: m.AWSResourcesPage })));
 
+// Multi-cloud pages
+const IntegrationsPage = lazy(() => import("@/app/pages/integrations-page").then(m => ({ default: m.IntegrationsPage })));
+const GCPResourcesPage = lazy(() => import("@/app/pages/gcp-resources-page").then(m => ({ default: m.GCPResourcesPage })));
+const AIUsagePage = lazy(() => import("@/app/pages/ai-usage-page").then(m => ({ default: m.AIUsagePage })));
+const CostForecastPage = lazy(() => import("@/app/pages/cost-forecast-page").then(m => ({ default: m.CostForecastPage })));
+
+// AI feature pages
+const AnomalyPage = lazy(() => import("@/app/pages/anomaly-page").then(m => ({ default: m.AnomalyPage })));
+const CloudQueryPage = lazy(() => import("@/app/pages/cloud-query-page").then(m => ({ default: m.CloudQueryPage })));
+
 // Import layout and protected route
 import { DashboardLayout } from "@/app/components/dashboard-layout";
 import { ProtectedRoute } from "@/app/components/protected-route";
@@ -126,6 +136,30 @@ export const router = createBrowserRouter([
             {
                 path: "aws-resources",
                 element: withSuspense(AWSResourcesPage),
+            },
+            {
+                path: "integrations",
+                element: withSuspense(IntegrationsPage),
+            },
+            {
+                path: "gcp-resources",
+                element: withSuspense(GCPResourcesPage),
+            },
+            {
+                path: "ai-usage",
+                element: withSuspense(AIUsagePage),
+            },
+            {
+                path: "cost-forecast",
+                element: withSuspense(CostForecastPage),
+            },
+            {
+                path: "anomalies",
+                element: withSuspense(AnomalyPage),
+            },
+            {
+                path: "cloud-query",
+                element: withSuspense(CloudQueryPage),
             },
         ],
     },
