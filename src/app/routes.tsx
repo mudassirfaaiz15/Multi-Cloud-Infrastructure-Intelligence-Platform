@@ -36,6 +36,14 @@ const CostForecastPage = lazy(() => import("@/app/pages/cost-forecast-page").the
 const AnomalyPage = lazy(() => import("@/app/pages/anomaly-page").then(m => ({ default: m.AnomalyPage })));
 const CloudQueryPage = lazy(() => import("@/app/pages/cloud-query-page").then(m => ({ default: m.CloudQueryPage })));
 
+// Advanced feature pages
+const TaggingPage = lazy(() => import("@/app/pages/tagging-page").then(m => ({ default: m.TaggingPage })));
+const DriftPage = lazy(() => import("@/app/pages/drift-page").then(m => ({ default: m.DriftPage })));
+const ResourceMapPage = lazy(() => import("@/app/pages/resource-map-page").then(m => ({ default: m.ResourceMapPage })));
+const DependencyGraphPage = lazy(() => import("@/app/pages/dependency-graph-page").then(m => ({ default: m.DependencyGraphPage })));
+const RBACPage = lazy(() => import("@/app/pages/rbac-page").then(m => ({ default: m.RBACPage })));
+const DigestSettingsPage = lazy(() => import("@/app/pages/digest-settings-page").then(m => ({ default: m.DigestSettingsPage })));
+
 // Import layout and protected route
 import { DashboardLayout } from "@/app/components/dashboard-layout";
 import { ProtectedRoute } from "@/app/components/protected-route";
@@ -160,6 +168,31 @@ export const router = createBrowserRouter([
             {
                 path: "cloud-query",
                 element: withSuspense(CloudQueryPage),
+            },
+            // Advanced feature pages
+            {
+                path: "tagging",
+                element: withSuspense(TaggingPage),
+            },
+            {
+                path: "drift",
+                element: withSuspense(DriftPage),
+            },
+            {
+                path: "resource-map",
+                element: withSuspense(ResourceMapPage),
+            },
+            {
+                path: "dependency-graph",
+                element: withSuspense(DependencyGraphPage),
+            },
+            {
+                path: "rbac",
+                element: withSuspense(RBACPage),
+            },
+            {
+                path: "digest",
+                element: withSuspense(DigestSettingsPage),
             },
         ],
     },
