@@ -30,6 +30,8 @@ import { OnboardingTour, useOnboarding } from '@/app/components/onboarding-tour'
 import { generateSummaryReport } from '@/lib/pdf-export';
 import { notifications } from '@/lib/notifications';
 import type { Resource, ResourceStatus, AlertType } from '@/types';
+import { CostHeatmap } from '@/app/components/cost-heatmap';
+import { PDFReportButton } from '@/app/utils/pdf-report';
 
 // Icon mapping for resource types
 const RESOURCE_ICONS: Record<string, typeof Server> = {
@@ -160,15 +162,7 @@ export function DashboardPage() {
                 Ctrl+F
               </kbd>
             </Button>
-            <Button
-              variant="outline"
-              aria-label="Export dashboard report"
-              onClick={handleExportReport}
-              disabled={hygieneLoading || !hygieneScore}
-            >
-              <Download className="w-4 h-4 mr-2" aria-hidden="true" />
-              Export
-            </Button>
+            <PDFReportButton />
             <Button
               aria-label="Run new AWS scan"
               onClick={handleRunScan}
@@ -295,6 +289,9 @@ export function DashboardPage() {
             })
           )}
         </div>
+
+        {/* Daily Cost Heatmap (GitHub Style) */}
+        <CostHeatmap />
 
         {/* Cost Chart */}
         {costLoading ? (

@@ -16,25 +16,29 @@ import {
   TrendingUp,
   Activity,
   AlertTriangle,
-  MessageSquare,
-  MapPin,
+  MessageCircle,
+  LocateFixed,
   Network,
-  GitCompare,
-  Tag,
-  Users,
+  GitMerge,
+  Bookmark,
   Mail,
   ChevronDown,
 } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { Avatar, AvatarFallback } from '@/app/components/ui/avatar';
 import { cn } from '@/app/components/ui/utils';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/app/context/auth-context';
 import { ThemeToggle } from '@/app/components/theme-toggle';
 import { CommandPalette, useCommandPalette } from '@/app/components/command-palette';
 import { NotificationCenter } from '@/app/components/notification-center';
 import { AIAdvisorWidget } from '@/app/components/ai-advisor-widget';
 import { OnboardingModal } from '@/app/components/onboarding-modal';
+import { CostTicker } from '@/app/components/cost-ticker';
+import { AIChatSidebar } from '@/app/components/ai-chat-sidebar';
+import { MobileTabBar } from '@/app/components/mobile-tab-bar';
+import { TrendingDown, Terminal, BarChart2 } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 
 // ─── Grouped Navigation ───────────────────────────────────────────────────────
 
@@ -65,9 +69,9 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { id: 'nav-resources', name: 'AWS Resources', href: '/app/aws-resources', icon: Cloud },
       { id: 'nav-gcp', name: 'GCP Resources', href: '/app/gcp-resources', icon: Cloud },
-      { id: 'nav-map', name: 'Resource Map', href: '/app/resource-map', icon: MapPin },
+      { id: 'nav-map', name: 'Resource Map', href: '/app/resource-map', icon: LocateFixed },
       { id: 'nav-graph', name: 'Dependency Graph', href: '/app/dependency-graph', icon: Network },
-      { id: 'nav-drift', name: 'Drift Detection', href: '/app/drift', icon: GitCompare },
+      { id: 'nav-drift', name: 'Drift Detection', href: '/app/drift', icon: GitMerge },
     ],
   },
   {
@@ -75,6 +79,9 @@ const NAV_GROUPS: NavGroup[] = [
     items: [
       { id: 'nav-costs', name: 'Costs', href: '/app/costs', icon: DollarSign },
       { id: 'nav-forecast', name: 'Cost Forecast', href: '/app/cost-forecast', icon: TrendingUp },
+      { id: 'nav-budget', name: 'Budget vs Actual', href: '/app/budget-actuals', icon: BarChart2 },
+      { id: 'nav-waterfall', name: 'Multi-Cloud Breakdown', href: '/app/costs/waterfall', icon: DollarSign },
+      { id: 'nav-savings', name: 'Savings Recommendations', href: '/app/savings', icon: TrendingDown },
       { id: 'nav-accounts', name: 'Accounts', href: '/app/accounts', icon: Cloud },
     ],
   },
@@ -82,7 +89,8 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'AI Features',
     items: [
       { id: 'nav-anomalies', name: 'Anomaly Detection', href: '/app/anomalies', icon: AlertTriangle },
-      { id: 'nav-query', name: 'Cloud Query', href: '/app/cloud-query', icon: MessageSquare },
+      { id: 'nav-query', name: 'Cloud Query', href: '/app/cloud-query', icon: MessageCircle },
+      { id: 'nav-cli', name: 'CLI Generator', href: '/app/cli', icon: Terminal },
       { id: 'nav-ai-usage', name: 'AI API Usage', href: '/app/ai-usage', icon: Activity },
       { id: 'nav-digest', name: 'Weekly Digest', href: '/app/digest', icon: Mail },
     ],
@@ -91,8 +99,8 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'Governance',
     items: [
       { id: 'nav-security', name: 'Security', href: '/app/security', icon: Shield },
-      { id: 'nav-tagging', name: 'Tag Compliance', href: '/app/tagging', icon: Tag },
-      { id: 'nav-rbac', name: 'Access Control', href: '/app/rbac', icon: Users },
+      { id: 'nav-tagging', name: 'Tag Compliance', href: '/app/tagging', icon: Bookmark },
+      { id: 'nav-rbac', name: 'Access Control', href: '/app/rbac', icon: User },
       { id: 'nav-iam', name: 'IAM Explainer', href: '/app/iam-explainer', icon: FileJson },
     ],
   },
@@ -108,6 +116,21 @@ const NAV_GROUPS: NavGroup[] = [
 ];
 
 // ─── NavLink helper ───────────────────────────────────────────────────────────
+
+function useThemeAccent(pathname: string) {
+  useEffect(() => {
+    const root = document.documentElement;
+    if (pathname.includes('/costs') || pathname.includes('/budget') || pathname.includes('/savings')) {
+      root.style.setProperty('--primary', '142 71% 45%'); // Green
+    } else if (pathname.includes('/security') || pathname.includes('/anomalies')) {
+      root.style.setProperty('--primary', '0 84% 60%'); // Red
+    } else if (pathname.includes('/query') || pathname.includes('/ai-usage') || pathname.includes('/cli')) {
+      root.style.setProperty('--primary', '271 91% 65%'); // Purple
+    } else {
+      root.style.setProperty('--primary', '221.2 83.2% 53.3%'); // Default Blue
+    }
+  }, [pathname]);
+}
 
 function NavLink({ item, onClick }: { item: NavItem; onClick?: () => void }) {
   const location = useLocation();
@@ -172,11 +195,14 @@ function SidebarNav({ onClose }: { onClose?: () => void }) {
 // ─── Main Layout ──────────────────────────────────────────────────────────────
 
 export function DashboardLayout() {
+  const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const { open: commandPaletteOpen, setOpen: setCommandPaletteOpen } = useCommandPalette();
+
+  useThemeAccent(location.pathname);
 
   const handleLogout = () => {
     logout();
@@ -258,11 +284,13 @@ export function DashboardLayout() {
             </div>
 
             <div className="flex items-center gap-2">
+              <CostTicker />
               <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 border border-border">
                 <div className="w-2 h-2 rounded-full bg-green-500" />
                 <span className="text-xs text-muted-foreground font-mono">••••{user?.awsAccountId || '1234'}</span>
               </div>
               <ThemeToggle />
+              <AIChatSidebar />
               <NotificationCenter />
               <Avatar className="w-8 h-8 cursor-pointer">
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
@@ -273,9 +301,22 @@ export function DashboardLayout() {
           </header>
 
           {/* Page Content */}
-          <main className="flex-1 overflow-auto">
-            <Outlet />
+          <main className="flex-1 overflow-auto pb-16 md:pb-0">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+                animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+                exit={{ opacity: 0, scale: 0.98, filter: 'blur(4px)' }}
+                transition={{ duration: 0.25, ease: 'easeOut' }}
+                className="h-full"
+              >
+                <Outlet />
+              </motion.div>
+            </AnimatePresence>
           </main>
+
+          <MobileTabBar />
         </div>
 
         {/* Mobile Sidebar Overlay */}

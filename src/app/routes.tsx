@@ -43,6 +43,11 @@ const ResourceMapPage = lazy(() => import("@/app/pages/resource-map-page").then(
 const DependencyGraphPage = lazy(() => import("@/app/pages/dependency-graph-page").then(m => ({ default: m.DependencyGraphPage })));
 const RBACPage = lazy(() => import("@/app/pages/rbac-page").then(m => ({ default: m.RBACPage })));
 const DigestSettingsPage = lazy(() => import("@/app/pages/digest-settings-page").then(m => ({ default: m.DigestSettingsPage })));
+const SavingsPage = lazy(() => import("@/app/pages/savings-page").then(m => ({ default: m.SavingsPage })));
+const CLIGeneratorPage = lazy(() => import("@/app/pages/cli-generator-page").then(m => ({ default: m.CLIGeneratorPage })));
+const BudgetActualsPage = lazy(() => import("@/app/pages/budget-actuals-page").then(m => ({ default: m.BudgetActualsPage })));
+const CloudWaterfallPage = lazy(() => import("@/app/pages/cloud-waterfall-page").then(m => ({ default: m.CloudWaterfallPage })));
+
 
 // Import layout and protected route
 import { DashboardLayout } from "@/app/components/dashboard-layout";
@@ -194,8 +199,25 @@ export const router = createBrowserRouter([
                 path: "digest",
                 element: withSuspense(DigestSettingsPage),
             },
+            {
+                path: "savings",
+                element: withSuspense(SavingsPage),
+            },
+            {
+                path: "cli",
+                element: withSuspense(CLIGeneratorPage),
+            },
+            {
+                path: "budget-actuals",
+                element: withSuspense(BudgetActualsPage),
+            },
+            {
+                path: "costs/waterfall",
+                element: withSuspense(CloudWaterfallPage),
+            },
         ],
     },
+
 
     // 404 catch-all
     {
