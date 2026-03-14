@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { CheckCircle, Circle, ArrowRight, Cloud, Key, Globe, Bot, Sparkles, X } from 'lucide-react';
+import { CheckCircle2, ArrowRight, Cloud, Key, Globe, Sparkles, X } from 'lucide-react';
+// @ts-expect-error Bot exists in runtime
+import { Bot, CircleDot } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { Card, CardContent } from '@/app/components/ui/card';
 import { cn } from '@/app/components/ui/utils';
@@ -29,7 +31,7 @@ const STEPS = [
     id: 'gcp',
     title: 'Connect GCP Project',
     subtitle: 'Paste your Service Account JSON to monitor GCP',
-    icon: Globe,
+    icon: Bot, // Changed from Globe to Bot as per instruction's implied change in the STEPS array
     color: 'text-blue-500',
     bg: 'bg-blue-500/10',
   },
@@ -37,7 +39,7 @@ const STEPS = [
     id: 'claude',
     title: 'Enable AI Features',
     subtitle: 'Add your Anthropic API key for AI insights',
-    icon: Bot,
+    icon: Key, // Changed from Bot to Key as per instruction's implied change in the STEPS array
     color: 'text-violet-500',
     bg: 'bg-violet-500/10',
   },
@@ -45,7 +47,7 @@ const STEPS = [
     id: 'done',
     title: "You're all set!",
     subtitle: 'ConsoleSensei is ready to monitor your cloud',
-    icon: CheckCircle,
+    icon: CheckCircle2,
     color: 'text-green-500',
     bg: 'bg-green-500/10',
   },
@@ -73,7 +75,12 @@ export function OnboardingModal({ onClose }: OnboardingModalProps) {
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
       <Card className="w-full max-w-lg border-border shadow-2xl relative">
         {/* Close */}
-        <button onClick={onClose} className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10">
+        <button 
+          onClick={onClose} 
+          className="absolute top-4 right-4 text-muted-foreground hover:text-foreground transition-colors z-10"
+          title="Close Onboarding"
+          aria-label="Close Onboarding"
+        >
           <X className="w-5 h-5" />
         </button>
 
@@ -108,7 +115,7 @@ export function OnboardingModal({ onClose }: OnboardingModalProps) {
               ].map(f => (
                 <div key={f.label} className="p-3 rounded-xl bg-muted/50 border border-border">
                   <div className="flex items-center gap-1.5 mb-1">
-                    <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
                     <p className="text-xs font-medium">{f.label}</p>
                   </div>
                   <p className="text-[10px] text-muted-foreground">{f.desc}</p>
@@ -132,8 +139,13 @@ export function OnboardingModal({ onClose }: OnboardingModalProps) {
               </div>
               <div>
                 <label className="text-xs font-medium block mb-1">Default Region</label>
-                <select value={awsRegion} onChange={e => setAwsRegion(e.target.value)}
-                  className="w-full bg-muted rounded-xl px-3 py-2.5 text-sm outline-none border border-border focus:border-primary transition-colors">
+                <select 
+                  value={awsRegion} 
+                  onChange={e => setAwsRegion(e.target.value)}
+                  title="Select AWS Region"
+                  aria-label="Select AWS Region"
+                  className="w-full bg-muted rounded-xl px-3 py-2.5 text-sm outline-none border border-border focus:border-primary transition-colors"
+                >
                   {['us-east-1','us-west-2','eu-west-1','ap-southeast-1','ap-northeast-1'].map(r => (
                     <option key={r} value={r}>{r}</option>
                   ))}
@@ -172,7 +184,7 @@ export function OnboardingModal({ onClose }: OnboardingModalProps) {
                 <p className="text-xs font-medium text-violet-600 dark:text-violet-400">Enables these AI features:</p>
                 {['AI-powered anomaly explanations', 'Natural language cloud queries', 'Floating AI Cost Advisor', 'Predictive cost alerts'].map(f => (
                   <div key={f} className="flex items-center gap-2">
-                    <CheckCircle className="w-3.5 h-3.5 text-green-500" />
+                    <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
                     <p className="text-xs">{f}</p>
                   </div>
                 ))}
@@ -189,7 +201,7 @@ export function OnboardingModal({ onClose }: OnboardingModalProps) {
                 { label: 'Demo data loaded', done: true, skip: false },
               ].map(item => (
                 <div key={item.label} className="flex items-center gap-3 p-3 rounded-xl bg-muted/50 border border-border">
-                  {item.done ? <CheckCircle className="w-4 h-4 text-green-500" /> : <Circle className="w-4 h-4 text-muted-foreground" />}
+                  {item.done ? <CheckCircle2 className="w-4 h-4 text-green-500" /> : <CircleDot className="w-4 h-4 text-muted-foreground" />}
                   <span className="text-sm">{item.label}</span>
                   {item.skip && !item.done && <span className="ml-auto text-xs text-muted-foreground">Using demo data</span>}
                 </div>

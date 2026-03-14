@@ -62,6 +62,7 @@ export function CostHeatmap() {
               {Array.from({ length: DAYS }, (_, d) => {
                 const cell = grid.find(c => c.col === w && c.row === d)!;
                 return (
+                  // eslint-disable-next-line react/forbid-dom-props
                   <div
                     key={d}
                     className="w-3.5 h-3.5 rounded-sm cursor-default transition-transform hover:scale-125"
@@ -86,6 +87,7 @@ export function CostHeatmap() {
       <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
         <span>Less</span>
         {['hsl(var(--muted))','#dcfce7','#bbf7d0','#86efac','#4ade80','#22c55e'].map(c => (
+          // eslint-disable-next-line react/forbid-dom-props
           <div key={c} className="w-3 h-3 rounded-sm" style={{ backgroundColor: c }} />
         ))}
         <span>More</span>

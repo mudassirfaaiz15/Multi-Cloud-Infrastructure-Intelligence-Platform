@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Bell, X, AlertCircle, AlertTriangle, Info, CheckCircle, DollarSign, Zap } from 'lucide-react';
+import { Bell, X, AlertCircle, AlertTriangle, Info, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { Badge } from '@/app/components/ui/badge';
 import { cn } from '@/app/components/ui/utils';
@@ -27,15 +27,10 @@ const TYPE_CONFIG = {
   critical: { icon: AlertCircle, color: 'text-red-500', bg: 'bg-red-500/10', dot: 'bg-red-500' },
   warning: { icon: AlertTriangle, color: 'text-amber-500', bg: 'bg-amber-500/10', dot: 'bg-amber-500' },
   info: { icon: Info, color: 'text-blue-500', bg: 'bg-blue-500/10', dot: 'bg-blue-500' },
-  success: { icon: CheckCircle, color: 'text-green-500', bg: 'bg-green-500/10', dot: 'bg-green-500' },
+  success: { icon: CheckCircle2, color: 'text-green-500', bg: 'bg-green-500/10', dot: 'bg-green-500' },
 };
 
-const CATEGORY_ICON = {
-  anomaly: AlertTriangle,
-  budget: DollarSign,
-  scan: Zap,
-  system: CheckCircle,
-};
+
 
 export function NotificationCenter() {
   const [open, setOpen] = useState(false);
@@ -107,7 +102,7 @@ export function NotificationCenter() {
         <div className="flex-1 overflow-y-auto divide-y divide-border">
           {notifications.length === 0 ? (
             <div className="py-12 text-center">
-              <CheckCircle className="w-10 h-10 text-green-500 mx-auto mb-2" />
+              <CheckCircle2 className="w-10 h-10 text-green-500 mx-auto mb-2" />
               <p className="text-sm text-muted-foreground">All caught up!</p>
             </div>
           ) : (
@@ -135,6 +130,8 @@ export function NotificationCenter() {
                   <button
                     onClick={e => { e.stopPropagation(); dismiss(n.id); }}
                     className="opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+                    title="Dismiss notification"
+                    aria-label="Dismiss notification"
                   >
                     <X className="w-3 h-3 text-muted-foreground hover:text-foreground" />
                   </button>

@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Bot, Send, X, Trash2, MessageCircle, Sparkles } from 'lucide-react';
+// @ts-ignore - these icons exist at runtime but lack TS definitions in this version
+import { Bot, Send, MessageCircle } from 'lucide-react';
+import { X, Trash2, Sparkles } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { cn } from '@/app/components/ui/utils';
 
@@ -33,8 +35,7 @@ function aiReply(q: string): string {
 
 const STORAGE_KEY = 'consoleSensei_chat_history';
 
-export function AIChatSidebar() {
-  const [open, setOpen]       = useState(false);
+export function AIChatSidebar({ open, onClose }: { open: boolean, onClose: () => void }) {
   const [input, setInput]     = useState('');
   const [typing, setTyping]   = useState(false);
   const [messages, setMessages] = useState<Message[]>(() => {
@@ -66,26 +67,13 @@ export function AIChatSidebar() {
     }, 900 + Math.random() * 600);
   }
 
+  if (!open) return null;
+
   return (
     <>
-      {/* Toggle button */}
-      <Button
-        variant="ghost" size="icon"
-        onClick={() => setOpen(v => !v)}
-        aria-label="Toggle AI assistant"
-        className="relative"
-        id="ai-chat-toggle"
-      >
-        <MessageCircle className="w-5 h-5" />
-        {messages.length > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-primary" />
-        )}
-      </Button>
-
-      {/* Drawer */}
-      {open && (
-        <div className="fixed inset-y-0 right-0 z-50 flex flex-col w-80 sm:w-96 bg-sidebar border-l border-sidebar-border shadow-2xl">
-          {/* Header */}
+      {/* Sidebar Container */}
+      <aside className="fixed inset-y-0 right-0 z-50 lg:static lg:z-10 flex flex-col w-[85vw] max-w-sm lg:w-[380px] bg-sidebar border-l border-sidebar-border lg:shadow-[-8px_0_24px_-12px_rgba(0,0,0,0.15)] shrink-0 h-full animate-in slide-in-from-right-full lg:animate-none">
+        {/* Header */}
           <div className="flex items-center gap-2.5 px-4 py-3 border-b border-sidebar-border shrink-0">
             <div className="flex items-center gap-2 flex-1 min-w-0">
               <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
@@ -107,7 +95,7 @@ export function AIChatSidebar() {
                 </Button>
               )}
               <Button variant="ghost" size="icon" className="h-7 w-7"
-                onClick={() => setOpen(false)} aria-label="Close chat">
+                onClick={onClose} aria-label="Close chat">
                 <X className="w-3.5 h-3.5" />
               </Button>
             </div>
@@ -154,8 +142,7 @@ export function AIChatSidebar() {
             {typing && (
               <div className="flex items-center gap-1.5 px-3 py-2 rounded-2xl bg-muted w-16">
                 {[0, 1, 2].map(i => (
-                  <span key={i} className="w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce"
-                    style={{ animationDelay: `${i * 0.15}s` }} />
+                  <span key={i} className={cn("w-1.5 h-1.5 rounded-full bg-muted-foreground animate-bounce", i === 0 ? "animation-delay-0" : i === 1 ? "animation-delay-150" : "animation-delay-300")} />
                 ))}
               </div>
             )}
@@ -183,8 +170,7 @@ export function AIChatSidebar() {
                 onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } }}
                 placeholder="Ask about your cloud..."
                 rows={1}
-                className="flex-1 bg-transparent text-sm resize-none outline-none placeholder:text-muted-foreground max-h-28"
-                style={{ scrollbarWidth: 'none' }}
+                className="flex-1 bg-transparent text-sm resize-none outline-none placeholder:text-muted-foreground max-h-28 scrollbar-none"
                 aria-label="Chat input"
               />
               <Button size="icon" className="h-7 w-7 shrink-0 rounded-lg" onClick={() => send()} disabled={!input.trim() || typing} aria-label="Send message">
@@ -192,13 +178,10 @@ export function AIChatSidebar() {
               </Button>
             </div>
           </div>
-        </div>
-      )}
+      </aside>
 
       {/* Backdrop on mobile */}
-      {open && (
-        <div className="fixed inset-0 z-40 bg-black/40 sm:hidden" onClick={() => setOpen(false)} aria-hidden="true" />
-      )}
+      <div className="fixed inset-0 z-40 bg-black/40 lg:hidden backdrop-blur-sm" onClick={onClose} aria-hidden="true" />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Badge } from '@/app/components/ui/badge';
+import { cn } from '@/app/components/ui/utils';
 import { DollarSign, Cloud, Globe, Wifi } from 'lucide-react';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -102,8 +103,7 @@ function WorldMap({ regions, selected, onSelect }: {
 }) {
   return (
     <div
-      className="w-full rounded-2xl overflow-hidden border border-slate-700/50 shadow-2xl"
-      style={{ background: 'radial-gradient(ellipse at 50% 38%, #0c2340 0%, #060d1c 55%, #020509 100%)' }}
+      className="w-full rounded-2xl overflow-hidden border border-slate-700/50 shadow-2xl bg-[radial-gradient(ellipse_at_50%_38%,_#0c2340_0%,_#060d1c_55%,_#020509_100%)]"
     >
       <svg
         viewBox="0 0 960 460"
@@ -223,8 +223,10 @@ function WorldMap({ regions, selected, onSelect }: {
             <g
               key={r.id}
               onClick={() => onSelect(isSelected ? null : r)}
-              className="cursor-pointer"
-              style={{ opacity: dim ? 0.35 : 1, transition: 'opacity 0.25s' }}
+              className={cn(
+                "cursor-pointer transition-opacity duration-250",
+                dim ? "opacity-35" : "opacity-100"
+              )}
               role="button"
               aria-label={`${r.name}: ${r.resources} resources, $${r.cost.toLocaleString()}/month`}
             >
@@ -233,18 +235,14 @@ function WorldMap({ regions, selected, onSelect }: {
 
               {/* Pulse ring for warning/critical */}
               {s.pulse && (
-                <circle cx={r.cx} cy={r.cy} r={radius + 3} fill="none" stroke={s.fill} strokeWidth="1.5" opacity="0">
-                  <animate attributeName="r"       values={`${radius};${radius + 20};${radius}`} dur="2.2s" repeatCount="indefinite" />
-                  <animate attributeName="opacity" values="0.65;0;0.65"                           dur="2.2s" repeatCount="indefinite" />
-                </circle>
+                // eslint-disable-next-line react/forbid-dom-props
+                <circle cx={r.cx} cy={r.cy} r={radius} fill="none" stroke={s.fill} strokeWidth="1.5" className="animate-ping" style={{ transformOrigin: `${r.cx}px ${r.cy}px`, animationDuration: '2.5s' }} />
               )}
 
               {/* Spinning dashed ring when selected */}
               {isSelected && (
-                <circle cx={r.cx} cy={r.cy} r={radius + 13} fill="none" stroke="white" strokeWidth="1.2" strokeOpacity="0.5" strokeDasharray="6 3">
-                  <animateTransform attributeName="transform" type="rotate"
-                    from={`0 ${r.cx} ${r.cy}`} to={`360 ${r.cx} ${r.cy}`} dur="7s" repeatCount="indefinite" />
-                </circle>
+                // eslint-disable-next-line react/forbid-dom-props
+                <circle cx={r.cx} cy={r.cy} r={radius + 13} fill="none" stroke="white" strokeWidth="1.2" strokeOpacity="0.5" strokeDasharray="6 3" className="animate-spin" style={{ transformOrigin: `${r.cx}px ${r.cy}px`, animationDuration: '7s' }} />
               )}
 
               {/* Solid indigo ring when connected */}
@@ -357,14 +355,15 @@ export function ResourceMapPage() {
           <WorldMap regions={REGIONS} selected={selected} onSelect={setSelected} />
 
           {/* Selected region detail strip */}
-          {selected ? (
-            <div className="flex flex-wrap items-center gap-4 p-4 rounded-xl bg-muted/40 border border-border animate-in fade-in slide-in-from-bottom-2 duration-200">
-              <div className="flex items-center gap-3">
-                <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: STATUS[selected.status].fill }} />
-                <div>
-                  <p className="font-semibold text-sm">{selected.name}</p>
-                  <Badge className={`${PROVIDER_BADGE[selected.provider]} mt-0.5`}>{selected.provider}</Badge>
+          {selected && (
+          <div className="absolute bottom-4 left-4 right-4 bg-slate-900/90 backdrop-blur-md p-4 rounded-xl border border-slate-700/50 shadow-2xl animate-in slide-in-from-bottom-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-lg font-bold text-slate-100">{selected.name}</h3>
+                  <div className="w-3 h-3 rounded-full shrink-0" style={{ backgroundColor: STATUS[selected.status].fill }} />
                 </div>
+                <Badge className={`${PROVIDER_BADGE[selected.provider]} mt-0.5`}>{selected.provider}</Badge>
               </div>
               <div className="flex gap-6 ml-auto flex-wrap">
                 <div>
@@ -386,7 +385,9 @@ export function ResourceMapPage() {
                 </span>
               </div>
             </div>
-          ) : (
+          </div>
+          )}
+          {!selected && (
             <div className="flex items-center gap-2 text-xs text-muted-foreground px-1">
               <Wifi className="w-3.5 h-3.5" />
               Click any glowing marker to inspect region details and highlight traffic connections

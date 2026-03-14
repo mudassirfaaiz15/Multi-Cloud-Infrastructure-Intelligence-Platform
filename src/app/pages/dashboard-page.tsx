@@ -16,7 +16,6 @@ import {
   XCircle,
   Activity,
   RefreshCw,
-  Download,
   Bell,
   Loader2,
   Search,
@@ -27,7 +26,6 @@ import { CardSkeleton, ChartSkeleton, AlertSkeleton, ActivitySkeleton } from '@/
 import { ResourceDetailsDialog } from '@/app/components/resource-details-dialog';
 import { SearchDialog } from '@/app/components/search-dialog';
 import { OnboardingTour, useOnboarding } from '@/app/components/onboarding-tour';
-import { generateSummaryReport } from '@/lib/pdf-export';
 import { notifications } from '@/lib/notifications';
 import type { Resource, ResourceStatus, AlertType } from '@/types';
 import { CostHeatmap } from '@/app/components/cost-heatmap';
@@ -106,24 +104,6 @@ export function DashboardPage() {
     }
   };
 
-  const handleExportReport = async () => {
-    if (!hygieneScore || !resources || !alerts) return;
-
-    try {
-      await generateSummaryReport({
-        title: 'AWS Infrastructure Report',
-        generatedAt: new Date(),
-        hygieneScore: hygieneScore.overall,
-        totalResources: resources.length,
-        criticalAlerts: alerts.filter(a => a.type === 'critical').length,
-        monthlyCost: costData?.[costData.length - 1]?.cost || 0,
-        recommendations: hygieneScore.recommendations,
-      });
-      notifications.exportSuccess('aws-infrastructure-report.pdf');
-    } catch {
-      notifications.error('Export failed', 'Could not generate PDF.');
-    }
-  };
 
   const handleResourceClick = (resource: Resource) => {
     setSelectedResource(resource);
@@ -183,7 +163,7 @@ export function DashboardPage() {
           {hygieneLoading ? (
             <CardSkeleton />
           ) : hygieneScore ? (
-            <Card className="border-border bg-gradient-to-br from-card to-card/50">
+            <Card className="border-border bg-card/40 backdrop-blur-xl shadow-lg border-primary/10">
               <CardHeader>
                 <CardTitle>Cloud Hygiene Score</CardTitle>
               </CardHeader>
@@ -265,7 +245,7 @@ export function DashboardPage() {
               return (
                 <Card
                   key={resource.id}
-                  className="border-border hover:border-primary/50 transition-colors cursor-pointer group"
+                  className="border-border bg-card/60 backdrop-blur-md hover:bg-card/80 hover:border-primary/50 transition-all cursor-pointer group shadow-sm hover:shadow-md"
                   onClick={() => handleResourceClick(resource)}
                 >
                   <CardContent className="pt-6">
@@ -297,7 +277,7 @@ export function DashboardPage() {
         {costLoading ? (
           <ChartSkeleton />
         ) : (
-          <Card className="border-border">
+          <Card className="border-border bg-card/60 backdrop-blur-md shadow-sm">
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle>Monthly Costs</CardTitle>
@@ -339,7 +319,7 @@ export function DashboardPage() {
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Risk Alerts */}
           <div data-tour="alerts">
-            <Card className="border-border h-full">
+            <Card className="border-border h-full bg-card/60 backdrop-blur-md shadow-sm xl:col-span-1">
               <CardHeader>
                 <div className="flex justify-between items-center">
                   <CardTitle>Risk Alerts</CardTitle>
@@ -391,7 +371,7 @@ export function DashboardPage() {
           </div>
 
           {/* Recent Activity */}
-          <Card className="border-border h-full">
+          <Card className="border-border h-full bg-card/60 backdrop-blur-md shadow-sm xl:col-span-1">
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
             </CardHeader>

@@ -98,6 +98,7 @@ export function DependencyGraphPage() {
               <div className="flex items-center gap-3 flex-wrap">
                 {Object.entries(TYPE_COLORS).slice(0, 5).map(([type, col]) => (
                   <div key={type} className="flex items-center gap-1.5">
+                    {/* eslint-disable-next-line react/forbid-dom-props */}
                     <div className="w-2.5 h-2.5 rounded-sm" style={{ backgroundColor: col.bg }} />
                     <span className="text-[10px] text-muted-foreground">{type}</span>
                   </div>
@@ -106,7 +107,9 @@ export function DependencyGraphPage() {
             </div>
           </CardHeader>
           <CardContent>
+            {/* eslint-disable-next-line react/forbid-dom-props */}
             <div className="bg-muted/20 rounded-xl overflow-hidden" style={{ height: '460px' }}>
+              {/* eslint-disable-next-line react/forbid-dom-props */}
               <svg width="100%" height="100%" viewBox="0 0 800 460" style={{ transform: `scale(${zoom})`, transformOrigin: 'center', transition: 'transform 0.2s' }}>
                 <defs>
                   <marker id="arrowhead" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto">
@@ -168,6 +171,7 @@ export function DependencyGraphPage() {
               <CardHeader><CardTitle className="text-base">Resource Details</CardTitle></CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-center gap-3">
+                  {/* eslint-disable-next-line react/forbid-dom-props */}
                   <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: getNodeColor(selected).bg }}>
                     <Network className="w-5 h-5 text-white" />
                   </div>
@@ -190,6 +194,7 @@ export function DependencyGraphPage() {
                       const other = NODES.find(n => n.id === otherId)!;
                       return (
                         <div key={i} className="flex items-center gap-2 p-2 rounded-lg bg-muted/30 border border-border">
+                          {/* eslint-disable-next-line react/forbid-dom-props */}
                           <div className="w-2 h-2 rounded-full" style={{ backgroundColor: getNodeColor(other).bg }} />
                           <span className="text-xs font-medium">{other.label}</span>
                           {e.label && <Badge variant="outline" className="text-[10px] ml-auto">{e.label}</Badge>}

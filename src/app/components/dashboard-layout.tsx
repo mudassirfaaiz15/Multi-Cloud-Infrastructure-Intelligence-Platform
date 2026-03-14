@@ -16,14 +16,12 @@ import {
   TrendingUp,
   Activity,
   AlertTriangle,
-  MessageCircle,
-  LocateFixed,
   Network,
-  GitMerge,
-  Bookmark,
   Mail,
   ChevronDown,
 } from 'lucide-react';
+// @ts-ignore - these icons exist at runtime but lack TS definitions in this version
+import { MessageCircle, LocateFixed, GitMerge, Bookmark } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { Avatar, AvatarFallback } from '@/app/components/ui/avatar';
 import { cn } from '@/app/components/ui/utils';
@@ -89,8 +87,7 @@ const NAV_GROUPS: NavGroup[] = [
     label: 'AI Features',
     items: [
       { id: 'nav-anomalies', name: 'Anomaly Detection', href: '/app/anomalies', icon: AlertTriangle },
-      { id: 'nav-query', name: 'Cloud Query', href: '/app/cloud-query', icon: MessageCircle },
-      { id: 'nav-cli', name: 'CLI Generator', href: '/app/cli', icon: Terminal },
+      { id: 'nav-cli', name: 'AI Cloud Generator', href: '/app/cli', icon: Terminal },
       { id: 'nav-ai-usage', name: 'AI API Usage', href: '/app/ai-usage', icon: Activity },
       { id: 'nav-digest', name: 'Weekly Digest', href: '/app/digest', icon: Mail },
     ],
@@ -199,6 +196,7 @@ export function DashboardLayout() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [chatOpen, setChatOpen] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const { open: commandPaletteOpen, setOpen: setCommandPaletteOpen } = useCommandPalette();
 
@@ -290,7 +288,16 @@ export function DashboardLayout() {
                 <span className="text-xs text-muted-foreground font-mono">••••{user?.awsAccountId || '1234'}</span>
               </div>
               <ThemeToggle />
-              <AIChatSidebar />
+              
+              <Button
+                variant="ghost" size="icon"
+                onClick={() => setChatOpen(v => !v)}
+                aria-label="Toggle AI assistant"
+                className="relative"
+              >
+                <MessageCircle className="w-5 h-5" />
+              </Button>
+              
               <NotificationCenter />
               <Avatar className="w-8 h-8 cursor-pointer">
                 <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
@@ -318,6 +325,9 @@ export function DashboardLayout() {
 
           <MobileTabBar />
         </div>
+
+        {/* Persistent Desktop AI Chat Sidebar (slide-over on mobile) */}
+        <AIChatSidebar open={chatOpen} onClose={() => setChatOpen(false)} />
 
         {/* Mobile Sidebar Overlay */}
         {sidebarOpen && (

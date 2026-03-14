@@ -59,6 +59,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     <div className="bg-card border border-border rounded-xl px-3 py-2.5 shadow-xl text-xs">
       <p className="font-semibold mb-1.5">{label}</p>
       {payload.map((p: any) => (
+        // eslint-disable-next-line react/forbid-dom-props
         <p key={p.name} style={{ color: p.color }}>{p.name}: <strong>${p.value?.toLocaleString()}</strong></p>
       ))}
     </div>
@@ -99,6 +100,7 @@ export function BudgetActualsPage() {
             </div>
             <p className="text-3xl font-bold">${actualSpend.toLocaleString()}</p>
             <div className="w-full bg-muted rounded-full h-2 mt-3">
+              {/* eslint-disable-next-line react/forbid-dom-props */}
               <div className={`${pct >= 90 ? 'bg-red-500' : pct >= 70 ? 'bg-amber-500' : 'bg-primary'} h-2 rounded-full transition-all`}
                 style={{ width: `${Math.min(pct, 100)}%` }} />
             </div>

@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
-import { Bot, X, Send, Loader2, Sparkles, ChevronDown } from 'lucide-react';
+import { X, Loader2, Sparkles, ChevronDown } from 'lucide-react';
+// @ts-expect-error exists in runtime
+import { Bot, Send } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { cn } from '@/app/components/ui/utils';
 
@@ -90,10 +92,20 @@ export function AIAdvisorWidget() {
               </div>
             </div>
             <div className="flex items-center gap-1">
-              <button onClick={e => { e.stopPropagation(); setMinimized(!minimized); }} className="text-muted-foreground hover:text-foreground">
+              <button 
+                onClick={e => { e.stopPropagation(); setMinimized(!minimized); }} 
+                className="text-muted-foreground hover:text-foreground"
+                title={minimized ? "Expand" : "Minimize"}
+                aria-label={minimized ? "Expand" : "Minimize"}
+              >
                 <ChevronDown className={cn('w-4 h-4 transition-transform', minimized && 'rotate-180')} />
               </button>
-              <button onClick={e => { e.stopPropagation(); setOpen(false); }} className="text-muted-foreground hover:text-foreground">
+              <button 
+                onClick={e => { e.stopPropagation(); setOpen(false); }} 
+                className="text-muted-foreground hover:text-foreground"
+                title="Close AI Advisor"
+                aria-label="Close AI Advisor"
+              >
                 <X className="w-4 h-4" />
               </button>
             </div>

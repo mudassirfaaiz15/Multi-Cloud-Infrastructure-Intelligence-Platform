@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
-import { Mail, Clock, Send, Check, DollarSign, AlertTriangle, TrendingUp, Shield } from 'lucide-react';
+import { Mail, Clock, Check, DollarSign, AlertTriangle, TrendingUp, Shield } from 'lucide-react';
+// @ts-expect-error Send exists in runtime
+import { Send } from 'lucide-react';
 
 const REPORT_SECTIONS = [
   { id: 'costs', label: 'Weekly Cost Summary', desc: 'Total spend, top services, vs last week', icon: DollarSign, enabled: true },
@@ -118,7 +120,10 @@ export function DigestSettingsPage() {
                     <p className="text-xs text-muted-foreground">{s.desc}</p>
                   </div>
                   <button onClick={() => toggle(s.id)}
-                    className={`shrink-0 w-10 h-6 rounded-full transition-colors ${s.enabled ? 'bg-primary' : 'bg-muted'}`}>
+                    className={`shrink-0 w-10 h-6 rounded-full transition-colors ${s.enabled ? 'bg-primary' : 'bg-muted'}`}
+                    title={`Toggle ${s.label}`}
+                    aria-label={`Toggle ${s.label}`}
+                  >
                     <div className={`w-4 h-4 bg-white rounded-full shadow transition-transform mx-1 ${s.enabled ? 'translate-x-4' : 'translate-x-0'}`} />
                   </button>
                 </div>

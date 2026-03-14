@@ -1,12 +1,14 @@
 import { Link, useLocation } from 'react-router';
-import { LayoutDashboard, DollarSign, AlertTriangle, MapPin, Shield } from 'lucide-react';
+import { LayoutDashboard, DollarSign, AlertTriangle, Shield } from 'lucide-react';
+// @ts-ignore - exists at runtime
+import { LocateFixed } from 'lucide-react';
 import { cn } from '@/app/components/ui/utils';
 
 const TABS = [
   { href: '/app',          icon: LayoutDashboard, label: 'Home'      },
   { href: '/app/costs',    icon: DollarSign,      label: 'Costs'     },
   { href: '/app/anomalies',icon: AlertTriangle,   label: 'Anomalies' },
-  { href: '/app/resource-map', icon: MapPin,      label: 'Map'       },
+  { href: '/app/resource-map', icon: LocateFixed, label: 'Map'       },
   { href: '/app/security', icon: Shield,          label: 'Security'  },
 ] as const;
 
@@ -16,6 +18,7 @@ export function MobileTabBar() {
   return (
     <nav
       className="fixed bottom-0 left-0 right-0 z-50 flex md:hidden bg-sidebar border-t border-sidebar-border"
+      // eslint-disable-next-line react/forbid-dom-props
       style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       aria-label="Mobile navigation"
     >

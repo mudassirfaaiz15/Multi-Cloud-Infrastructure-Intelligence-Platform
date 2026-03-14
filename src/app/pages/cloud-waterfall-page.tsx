@@ -34,6 +34,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
   return (
     <div className="bg-card border border-border rounded-xl px-3 py-2.5 shadow-xl text-xs min-w-32">
       <p className="font-semibold mb-1.5">{label}</p>
+      {/* eslint-disable-next-line react/forbid-dom-props */}
       {payload.map((p: any) => <p key={p.name} style={{ color: p.color }}>{p.name}: <strong>${p.value?.toLocaleString()}</strong></p>)}
       <p className="border-t border-border mt-1.5 pt-1.5 font-bold">Total: ${total.toLocaleString()}</p>
     </div>
@@ -138,6 +139,7 @@ export function CloudWaterfallPage() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <div className="flex-1 bg-muted rounded-full h-1.5 max-w-20">
+                        {/* eslint-disable-next-line react/forbid-dom-props */}
                         <div className="h-1.5 rounded-full" style={{ width: `${(d.value / grandTotal) * 100}%`, backgroundColor: d.color }} />
                       </div>
                       <span className="text-xs text-muted-foreground">{Math.round((d.value / grandTotal) * 100)}%</span>
