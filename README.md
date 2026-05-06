@@ -19,14 +19,14 @@ Monitor AWS infrastructure, analyze cloud costs, detect security risks, and mana
 
 <br>
 
-[🌐 Live Application](https://multi-cloud-infrastructure-intellig-sage.vercel.app/) •
-[📂 GitHub Repository](https://github.com/mudassirfaaiz15/Multi-Cloud-Infrastructure-Intelligence-Platform)
+[Live Application](https://multi-cloud-infrastructure-intellig-sage.vercel.app/) •
+[GitHub Repository](https://github.com/mudassirfaaiz15/Multi-Cloud-Infrastructure-Intelligence-Platform)
 
 </div>
 
 ---
 
-# 📌 Overview
+# Overview
 
 **CONSOLE SENSEI CLOUD OPS** is a modern SaaS-based cloud operations platform engineered for DevOps teams, cloud engineers, startups, and enterprises managing large-scale AWS environments.
 
@@ -36,24 +36,24 @@ Built using **React 18 + TypeScript** on the frontend and **Flask + boto3** on t
 
 ---
 
-# ✨ Core Features
+# Core Features
 
-- 🔍 AWS Resource Discovery & Inventory
-- 💰 Real-Time Cost Intelligence Dashboard
-- 🛡️ IAM Security & Compliance Auditing
-- 📊 Multi-Account Cloud Management
-- 📈 CloudTrail Activity Monitoring
-- 🚨 Intelligent Alerting System
-- 👥 Team Collaboration & RBAC
-- 📄 PDF & CSV Export Reports
-- ⚡ Real-Time Infrastructure Visibility
-- 🎯 Idle Resource Detection
-- 🔐 JWT + API Key Authentication
-- 🌍 Multi-Region AWS Support
+- AWS Resource Discovery & Inventory
+- Real-Time Cost Intelligence Dashboard
+- IAM Security & Compliance Auditing
+- Multi-Account Cloud Management
+- CloudTrail Activity Monitoring
+- Intelligent Alerting System
+- Team Collaboration & RBAC
+- PDF & CSV Export Reports
+- Real-Time Infrastructure Visibility
+- Idle Resource Detection
+- JWT + API Key Authentication
+- Multi-Region AWS Support
 
 ---
 
-# 🚨 Problem Statement
+# Problem Statement
 
 Engineering and DevOps teams managing AWS environments often lack a lightweight and unified platform capable of simultaneously:
 
@@ -68,7 +68,7 @@ Most enterprise solutions are expensive, difficult to configure, and overloaded 
 
 ---
 
-# 💡 Proposed Solution
+# Proposed Solution
 
 CONSOLE SENSEI CLOUD OPS provides a unified cloud intelligence dashboard that:
 
@@ -84,7 +84,7 @@ The platform is deployable within minutes using **Vercel** and **Railway** while
 
 ---
 
-# 🏗️ System Architecture
+# System Architecture
 
 ```text
  ┌───────────────────────────────┐
@@ -108,7 +108,7 @@ The platform is deployable within minutes using **Vercel** and **Railway** while
 
 ---
 
-# 🏛️ Infrastructure Architecture
+# Infrastructure Architecture
 
 ```text
 ┌─────────────────────────────────────────────────────────┐
@@ -148,9 +148,9 @@ The platform is deployable within minutes using **Vercel** and **Railway** while
 
 ---
 
-# ⚙️ Functional Requirements
+# Functional Requirements
 
-## 🔐 Authentication
+## Authentication
 
 - JWT-based authentication system
 - Secure login & registration
@@ -165,7 +165,7 @@ The platform is deployable within minutes using **Vercel** and **Railway** while
 
 ---
 
-## ☁️ AWS Account Management
+## AWS Account Management
 
 - Connect multiple AWS accounts
 - Multi-region cloud monitoring
@@ -176,7 +176,7 @@ The platform is deployable within minutes using **Vercel** and **Railway** while
 
 ---
 
-## 🔍 Resource Discovery
+## Resource Discovery
 
 Automatically scans:
 
@@ -200,7 +200,7 @@ Automatically scans:
 
 ---
 
-## 💰 Cost Intelligence
+## Cost Intelligence
 
 - Real-time cost analytics
 - Cost breakdown by:
@@ -219,7 +219,7 @@ Automatically scans:
 
 ---
 
-## 🛡️ Security & Compliance
+## Security & Compliance
 
 - IAM policy analysis
 - Over-permission detection
@@ -231,7 +231,7 @@ Automatically scans:
 
 ---
 
-## 📈 Activity Monitoring
+## Activity Monitoring
 
 - CloudTrail integration
 - Infrastructure activity logs
@@ -247,7 +247,7 @@ Automatically scans:
 
 ---
 
-## 🚨 Alerts & Notifications
+## Alerts & Notifications
 
 - Cost spike alerts
 - Resource utilization alerts
@@ -258,7 +258,7 @@ Automatically scans:
 
 ---
 
-## 👥 Team Management
+## Team Management
 
 - Invite team members
 - Assign team roles
@@ -268,7 +268,7 @@ Automatically scans:
 
 ---
 
-## 📄 Reports & Analytics
+## Reports & Analytics
 
 - Monthly cost reports
 - Security reports
@@ -279,7 +279,7 @@ Automatically scans:
 
 ---
 
-# 🚀 Non-Functional Requirements
+# Non-Functional Requirements
 
 | Requirement | Target |
 |---|---|
@@ -294,7 +294,7 @@ Automatically scans:
 
 ---
 
-# 🛠️ Technology Stack
+# Technology Stack
 
 | Layer | Technology |
 |---|---|
@@ -316,7 +316,7 @@ Automatically scans:
 
 ---
 
-# 📂 Project Structure
+# Project Structure
 
 ```text
 ConsoleSensei-Cloud/
@@ -359,7 +359,7 @@ ConsoleSensei-Cloud/
 
 ---
 
-# 🚀 Quick Start
+# Quick Start
 
 ## Prerequisites
 
@@ -429,7 +429,7 @@ python api.py
 
 ---
 
-# 🌐 Live Deployment
+# Live Deployment
 
 | Service | URL |
 |---|---|
@@ -438,7 +438,7 @@ python api.py
 
 ---
 
-# 📈 Performance Optimizations
+# Performance Optimizations
 
 - Code Splitting
 - Lazy Loading
@@ -451,7 +451,7 @@ python api.py
 
 ---
 
-# 🔒 Security Features
+# Security Features
 
 - JWT Authentication
 - HTTPS/TLS Encryption
@@ -464,7 +464,7 @@ python api.py
 
 ---
 
-# 🧪 Testing
+# Testing
 
 ```bash
 npm test
@@ -481,7 +481,7 @@ npm run test:coverage
 
 ---
 
-# 🚢 Deployment
+# Deployment
 
 ## Frontend Deployment
 
@@ -500,7 +500,7 @@ railway up
 
 ---
 
-# 📚 Documentation
+# Documentation
 
 - API Documentation
 - Deployment Guide
@@ -510,7 +510,7 @@ railway up
 
 ---
 
-# 📊 Key Highlights
+# Key Highlights
 
 - Enterprise-grade AWS intelligence platform
 - Real-time cloud monitoring
@@ -525,7 +525,7 @@ railway up
 
 ---
 
-# 🏁 Conclusion
+# Conclusion
 
 **CONSOLE SENSEI CLOUD OPS** is a scalable cloud operations intelligence platform designed to simplify AWS infrastructure management for modern DevOps teams.
 
@@ -542,7 +542,7 @@ It demonstrates strong engineering practices, scalable architecture, and enterpr
 
 ---
 
-# 👨‍💻 Developed By
+# Developed By
 
 ## Mudassir Faaiz Mohammed
 
@@ -550,15 +550,15 @@ It demonstrates strong engineering practices, scalable architecture, and enterpr
 
 ---
 
-# ⭐ Support
+# Support
 
 If you found this project useful:
 
-- ⭐ Star the repository
-- 🍴 Fork the project
-- 🛠️ Contribute improvements
-- 🐛 Report issues
-- 📢 Share feedback
+- Star the repository
+- Fork the project
+- Contribute improvements
+- Report issues
+- Share feedback
 
 ---
 
@@ -574,6 +574,6 @@ If you found this project useful:
 
 <br>
 
-⭐ If you found this project helpful, consider giving it a star!
+If you found this project helpful, consider giving it a star!
 
 </div>
