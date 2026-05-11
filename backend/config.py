@@ -1,212 +1,128 @@
 """
-Configuration file for AWS Resource Tracker Backend
-Environment-specific settings and defaults
+Production Configuration Management
+Centralized configuration for all services
 """
 
 import os
 from datetime import timedelta
-
+from typing import Optional
 
 class Config:
     """Base configuration"""
-
+    
     # Flask
-    SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
-    JSON_SORT_KEYS = False
-
-    # AWS
-    AWS_MAX_WORKERS = int(os.environ.get('AWS_MAX_WORKERS', 5))
-    AWS_REQUEST_TIMEOUT = int(os.environ.get('AWS_REQUEST_TIMEOUT', 30))
-    AWS_MAX_RETRIES = int(os.environ.get('AWS_MAX_RETRIES', 3))
-
-    # Scanning
-    SCAN_CACHE_TTL = timedelta(hours=int(os.environ.get('SCAN_CACHE_TTL_HOURS', 1)))
-    SCAN_TIMEOUT = int(os.environ.get('SCAN_TIMEOUT_SECONDS', 600))  # 10 minutes
-
-    # Logging
-    LOG_LEVEL = os.environ.get('LOG_LEVEL', 'INFO')
-    LOG_FILE = os.environ.get('LOG_FILE', 'aws_resource_tracker.log')
-
-    # API
-    API_VERSION = '1.0.0'
-    API_PREFIX = '/api/v1'
-    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB max request size
-
+    SECRET_KEY = os.getenv("SECRET_KEY", "dev-secret-key-change-in-production")
+    DEBUG = os.getenv("FLASK_DEBUG", "false").lower() == "true"
+    ENV = os.getenv("FLASK_ENV", "production")
+    
+    # Database
+    DATABASE_URL = os.getenv(
+        "DATABASE_URL",
+        "postgresql://user:password@localhost:5432/console_sensei"
+    )
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
+    SQLALCHEMY_ECHO = os.getenv("SQL_ECHO", "false").lower() == "true"
+    
+    # Connection Pool
+    DB_POOL_SIZE = int(os.getenv("DB_POOL_SIZE", 20))
+    DB_MAX_OVERFLOW = int(os.getenv("DB_MAX_OVERFLOW", 40))
+    DB_POOL_RECYCLE = int(os.getenv("DB_POOL_RECYCLE", 3600))
+    
     # JWT
-    JWT_ALGORITHM = 'HS256'
-    JWT_EXPIRATION = timedelta(hours=int(os.environ.get('JWT_EXPIRATION_HOURS', 24)))
-
+    JWT_SECRET_KEY = os.getenv("JWT_SECRET_KEY", "jwt-secret-key")
+    JWT_EXPIRATION_HOURS = int(os.getenv("JWT_EXPIRATION_HOURS", 24))
+    JWT_REFRESH_EXPIRATION_DAYS = int(os.getenv("JWT_REFRESH_EXPIRATION_DAYS", 30))
+    
+    # AWS
+    AWS_REGION = os.getenv("AWS_REGION", "us-east-1")
+    AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+    AWS_ACCOUNT_ID = os.getenv("AWS_ACCOUNT_ID")
+    
+    # AI Providers
+    ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY")
+    OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+    CLAUDE_DEFAULT_MODEL = os.getenv("CLAUDE_DEFAULT_MODEL", "claude-3-5-sonnet-20241022")
+    OPENAI_DEFAULT_MODEL = os.getenv("OPENAI_DEFAULT_MODEL", "gpt-4-turbo")
+    
+    # Redis
+    REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    REDIS_CACHE_TTL = int(os.getenv("REDIS_CACHE_TTL", 3600))
+    
     # CORS
-    CORS_ORIGINS = os.environ.get('CORS_ORIGINS', '*').split(',')
-
-    # Supported AWS Services
-    SUPPORTED_SERVICES = {
-        'ec2': {
-            'name': 'EC2',
-            'scanners': ['instances', 'volumes', 'elastic_ips'],
-            'region_specific': True,
-        },
-        's3': {
-            'name': 'S3',
-            'scanners': ['buckets'],
-            'region_specific': False,
-        },
-        'rds': {
-            'name': 'RDS',
-            'scanners': ['instances'],
-            'region_specific': True,
-        },
-        'lambda': {
-            'name': 'Lambda',
-            'scanners': ['functions'],
-            'region_specific': True,
-        },
-        'elbv2': {
-            'name': 'Elastic Load Balancing',
-            'scanners': ['load_balancers'],
-            'region_specific': True,
-        },
-        'logs': {
-            'name': 'CloudWatch Logs',
-            'scanners': ['log_groups'],
-            'region_specific': True,
-        },
-        'iam': {
-            'name': 'IAM',
-            'scanners': ['users', 'roles'],
-            'region_specific': False,
-        },
-    }
-
-    # Resource Types
-    RESOURCE_TYPES = {
-        'EC2_Instance',
-        'EBS_Volume',
-        'Elastic_IP',
-        'S3_Bucket',
-        'RDS_Instance',
-        'Lambda_Function',
-        'Load_Balancer',
-        'CloudWatch_LogGroup',
-        'NAT_Gateway',
-        'IAM_User',
-        'IAM_Role',
-    }
-
-    # Resource States
-    RESOURCE_STATES = {
-        'running',
-        'stopped',
-        'stopping',
-        'starting',
-        'terminated',
-        'terminating',
-        'pending',
-        'available',
-        'in-use',
-        'deleting',
-        'deleted',
-        'creating',
-        'active',
-        'associated',
-        'unassociated',
-    }
-
-    # Cost Estimation Defaults (monthly)
-    COST_ESTIMATES = {
-        'EC2_Instance': {
-            't3.micro': 0.0116,
-            't3.small': 0.0232,
-            't3.medium': 0.0464,
-            't3.large': 0.0928,
-            't3.xlarge': 0.1856,
-            't3.2xlarge': 0.3712,
-            't3a.micro': 0.0104,
-            't3a.small': 0.0208,
-            't3a.medium': 0.0416,
-            't3a.large': 0.0832,
-            'm5.large': 0.096,
-            'm5.xlarge': 0.192,
-            'm5.2xlarge': 0.384,
-            'c5.large': 0.085,
-            'c5.xlarge': 0.170,
-            'r5.large': 0.126,
-            'r5.xlarge': 0.252,
-        },
-        'EBS_Volume': {
-            'gp2': 0.1 / 30,  # $0.10 per GB-month, convert to per 1GB
-            'gp3': 0.08 / 30,
-            'io1': 0.125 / 30,
-            'st1': 0.045 / 30,
-            'sc1': 0.015 / 30,
-        },
-        'RDS_Instance': {
-            'db.t3.micro': 0.017,
-            'db.t3.small': 0.034,
-            'db.t3.medium': 0.068,
-            'db.t3.large': 0.136,
-            'db.t3.xlarge': 0.272,
-            'db.m5.large': 0.215,
-            'db.m5.xlarge': 0.43,
-        },
-        'Load_Balancer': {
-            'application': 16.2,  # $16.2 per month
-            'network': 32.4,  # $32.4 per month
-            'classic': 9,  # $9 per month (Classic LB)
-        },
-        'NAT_Gateway': 32.0,  # $32 per month
-        'Elastic_IP': 3.6,  # $3.6 per month if unassociated
-        'Lambda_Function': 0.2,  # Varies by invocations and duration
-    }
-
-    # Error Messages
-    ERROR_MESSAGES = {
-        'MISSING_CREDENTIALS': 'AWS credentials are required',
-        'INVALID_CREDENTIALS': 'Invalid AWS credentials provided',
-        'MISSING_RESOURCE_ID': 'Resource ID is required',
-        'INVALID_ACTION': 'Invalid action. Must be stop or delete',
-        'RESOURCE_NOT_FOUND': 'Resource not found',
-        'INSUFFICIENT_PERMISSIONS': 'Insufficient permissions to perform action',
-        'SCAN_TIMEOUT': 'Scan operation timed out',
-        'SCAN_IN_PROGRESS': 'Another scan is already in progress',
-    }
+    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:3000").split(",")
+    
+    # WebSocket
+    WEBSOCKET_ENABLED = os.getenv("WEBSOCKET_ENABLED", "true").lower() == "true"
+    WEBSOCKET_PING_INTERVAL = int(os.getenv("WEBSOCKET_PING_INTERVAL", 30))
+    WEBSOCKET_PING_TIMEOUT = int(os.getenv("WEBSOCKET_PING_TIMEOUT", 10))
+    
+    # Logging
+    LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+    LOG_FORMAT = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    
+    # Features
+    FEATURE_REAL_TIME_MONITORING = os.getenv("FEATURE_REAL_TIME_MONITORING", "true").lower() == "true"
+    FEATURE_MULTI_LLM = os.getenv("FEATURE_MULTI_LLM", "true").lower() == "true"
+    FEATURE_COST_FORECASTING = os.getenv("FEATURE_COST_FORECASTING", "true").lower() == "true"
+    FEATURE_ANOMALY_DETECTION = os.getenv("FEATURE_ANOMALY_DETECTION", "true").lower() == "true"
+    FEATURE_SECURITY_HUB = os.getenv("FEATURE_SECURITY_HUB", "true").lower() == "true"
+    FEATURE_CLOUDTRAIL = os.getenv("FEATURE_CLOUDTRAIL", "true").lower() == "true"
+    
+    # Rate Limiting
+    RATELIMIT_STORAGE_URL = os.getenv("RATELIMIT_STORAGE_URL", "memory://")
+    
+    @staticmethod
+    def validate():
+        """Validate critical configuration"""
+        errors = []
+        
+        if not Config.DATABASE_URL:
+            errors.append("DATABASE_URL not configured")
+        
+        if not Config.AWS_ACCESS_KEY_ID:
+            errors.append("AWS_ACCESS_KEY_ID not configured")
+        
+        if not Config.AWS_SECRET_ACCESS_KEY:
+            errors.append("AWS_SECRET_ACCESS_KEY not configured")
+        
+        if not Config.ANTHROPIC_API_KEY and not Config.OPENAI_API_KEY:
+            errors.append("At least one AI provider key required (ANTHROPIC_API_KEY or OPENAI_API_KEY)")
+        
+        if errors:
+            raise ValueError("Configuration errors:\n" + "\n".join(errors))
+        
+        return True
 
 
 class DevelopmentConfig(Config):
     """Development configuration"""
     DEBUG = True
-    TESTING = False
-    LOG_LEVEL = 'DEBUG'
-    AWS_MAX_WORKERS = 2  # Fewer workers in development
+    ENV = "development"
+    SQLALCHEMY_ECHO = True
 
 
 class ProductionConfig(Config):
     """Production configuration"""
     DEBUG = False
-    TESTING = False
-    LOG_LEVEL = 'INFO'
-    AWS_MAX_WORKERS = 10  # More workers in production
+    ENV = "production"
+    SQLALCHEMY_ECHO = False
 
 
 class TestingConfig(Config):
     """Testing configuration"""
-    DEBUG = True
     TESTING = True
-    LOG_LEVEL = 'DEBUG'
-    AWS_MAX_WORKERS = 1
+    DATABASE_URL = "sqlite:///:memory:"
+    SQLALCHEMY_ECHO = True
 
 
-def get_config(env: str = None) -> Config:
+def get_config() -> Config:
     """Get configuration based on environment"""
-    env = env or os.environ.get('FLASK_ENV', 'development')
-
-    if env == 'production':
-        return ProductionConfig()
-    elif env == 'testing':
+    env = os.getenv("FLASK_ENV", "production")
+    
+    if env == "development":
+        return DevelopmentConfig()
+    elif env == "testing":
         return TestingConfig()
     else:
-        return DevelopmentConfig()
-
-
-# Export default config
-config = get_config()
+        return ProductionConfig()
