@@ -1,7 +1,5 @@
 # CONSOLE SENSEI CLOUD OPS
 
-<div align="center">
-
 ![AWS](https://img.shields.io/badge/AWS-Cloud%20Operations-FF9900?style=for-the-badge&logo=amazonaws&logoColor=white)
 ![Claude AI](https://img.shields.io/badge/Claude%20AI-Integration-purple?style=for-the-badge&logo=anthropic&logoColor=white)
 ![React](https://img.shields.io/badge/React-18-61DAFB?style=for-the-badge&logo=react&logoColor=black)
@@ -13,23 +11,15 @@
 ![Supabase](https://img.shields.io/badge/Database-Supabase-3ECF8E?style=for-the-badge&logo=supabase&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-blue?style=for-the-badge)
 
-# CONSOLE SENSEI CLOUD OPS
-
-### Enterprise-Grade Multi-Cloud Infrastructure Intelligence Platform with AI-Powered Insights
+## Enterprise-Grade Multi-Cloud Infrastructure Intelligence Platform with AI-Powered Insights
 
 Monitor AWS infrastructure, analyze cloud costs with AI insights, detect security risks, and manage multi-account environments from one intelligent dashboard powered by Claude AI.
 
-<br>
-
-[Live Application](https://multi-cloud-infrastructure-intellig-sage.vercel.app/) •
-[GitHub Repository](https://github.com/mudassirfaaiz15/Multi-Cloud-Infrastructure-Intelligence-Platform) •
-[Setup Guide](./LOCAL_SETUP_GUIDE.md)
-
-</div>
+[Live Application](https://multi-cloud-infrastructure-intellig-sage.vercel.app/) • [GitHub Repository](https://github.com/mudassirfaaiz15/Multi-Cloud-Infrastructure-Intelligence-Platform) • [Setup Guide](./LOCAL_SETUP_GUIDE.md)
 
 ---
 
-# Overview
+## Overview
 
 **CONSOLE SENSEI CLOUD OPS** is a modern SaaS-based cloud operations platform engineered for DevOps teams, cloud engineers, startups, and enterprises managing large-scale AWS environments.
 
@@ -41,7 +31,7 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 
 ---
 
-# What's New (May 2026)
+## What's New (May 2026)
 
 ## AI-Powered Features
 
@@ -62,9 +52,10 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 
 ---
 
-# Core Features
+## Core Features
 
-## Cloud Infrastructure Management
+### Cloud Infrastructure Management
+
 - AWS Resource Discovery & Inventory
 - Multi-Region Cloud Monitoring
 - Real-Time Infrastructure Visibility
@@ -72,7 +63,8 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 - Idle Resource Detection
 - Infrastructure Change Tracking
 
-## Finance & Cost Operations
+### Finance & Cost Operations
+
 - Real-Time Cost Intelligence Dashboard
 - Cost Breakdown by Service, Region, Account
 - Budget Threshold Alerts
@@ -80,7 +72,8 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 - Usage Trend Analysis & Forecasting
 - Monthly Cost Reports
 
-## Security & Compliance
+### Security & Compliance
+
 - IAM Security & Compliance Auditing
 - Security Posture Scoring (0-100)
 - Over-Permission Detection
@@ -88,7 +81,8 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 - CloudTrail Activity Monitoring
 - AWS Security Hub Integration
 
-## Operations & Monitoring
+### Operations & Monitoring
+
 - Real-Time Activity Logging
 - CloudTrail Event Tracking
 - Infrastructure Change Auditing
@@ -96,7 +90,8 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 - Event Filtering & Search
 - Operational Analytics Dashboard
 
-## Collaboration & Reporting
+### Collaboration & Reporting
+
 - Multi-Account Cloud Management
 - Team Collaboration & RBAC
 - PDF & CSV Export Reports
@@ -104,7 +99,8 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 - Role-Based Access Control
 - Team Member Invitations
 
-## AI-Powered Intelligence
+### AI-Powered Intelligence
+
 - Claude AI Chat Sidebar
 - Natural Language Infrastructure Queries
 - AI Cost Anomaly Detection
@@ -114,7 +110,7 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 
 ---
 
-# System Architecture
+## System Architecture
 
 ```text
  CLIENT BROWSER
@@ -151,7 +147,7 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 
 ---
 
-# Infrastructure Architecture
+## Infrastructure Architecture
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
@@ -205,18 +201,20 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 
 ---
 
-# API Endpoints
+## API Endpoints
 
-## Authentication Endpoints
-```
+### Authentication Endpoints
+
+```http
 POST   /api/auth/login              - User authentication
 POST   /api/auth/register           - New user registration
 POST   /api/auth/logout             - User logout
 POST   /api/auth/refresh-token      - Token refresh
 ```
 
-## Cloud Resource Endpoints
-```
+### Cloud Resource Endpoints
+
+```http
 GET    /api/v1/resources            - List all resources
 GET    /api/v1/resources/{id}       - Get resource details
 GET    /api/v1/resources/ec2        - EC2 instances
@@ -225,8 +223,9 @@ GET    /api/v1/resources/s3         - S3 buckets
 GET    /api/v1/resources/lambda     - Lambda functions
 ```
 
-## Cost Intelligence Endpoints
-```
+### Cost Intelligence Endpoints
+
+```http
 GET    /api/v1/costs                - Cost breakdown
 GET    /api/v1/costs/forecast       - Cost forecast
 GET    /api/v1/costs/trends         - Cost trends
@@ -234,33 +233,36 @@ GET    /api/v1/budgets              - Budget alerts
 POST   /api/v1/budgets              - Create budget
 ```
 
-## Security & Compliance Endpoints
-```
+### Security & Compliance Endpoints
+
+```http
 GET    /api/v1/security/findings    - Security findings
 GET    /api/v1/security/audit       - Security audit log
 GET    /api/v1/iam/analysis         - IAM analysis
 GET    /api/v1/security/score       - Security score
 ```
 
-## Activity & Monitoring Endpoints
-```
+### Activity & Monitoring Endpoints
+
+```http
 GET    /api/v1/activity             - Activity log
 GET    /api/v1/activity/cloudtrail  - CloudTrail events
 GET    /api/v1/monitoring/alerts    - Active alerts
 GET    /api/v1/monitoring/metrics   - Performance metrics
 ```
 
-## AI Chat Endpoints (NEW)
-```
+### AI Chat Endpoints (NEW)
+
+```http
 POST   /api/v1/ai/chat              - AI chat query
 GET    /api/v1/ai/usage             - AI usage statistics
 ```
 
 ---
 
-# Functional Requirements
+## Functional Requirements
 
-## Authentication
+### Authentication
 
 - JWT-based authentication system
 - Secure login & registration
@@ -276,7 +278,7 @@ GET    /api/v1/ai/usage             - AI usage statistics
 
 ---
 
-## AWS Account Management
+### AWS Account Management
 
 - Connect multiple AWS accounts
 - Multi-region cloud monitoring
@@ -288,7 +290,7 @@ GET    /api/v1/ai/usage             - AI usage statistics
 
 ---
 
-## Resource Discovery & Monitoring
+### Resource Discovery & Monitoring
 
 Automatically scans and monitors:
 
@@ -298,7 +300,7 @@ Automatically scans and monitors:
 - **Networking:** VPC, Load Balancers, Route 53
 - **Management:** IAM, CloudTrail, CloudWatch
 
-### Features
+#### Features
 
 - Auto resource scanning
 - Infrastructure inventory generation
@@ -311,7 +313,7 @@ Automatically scans and monitors:
 
 ---
 
-## Cost Intelligence & FinOps
+### Cost Intelligence & FinOps
 
 - Real-time cost analytics
 - Cost breakdown by:
@@ -325,7 +327,7 @@ Automatically scans and monitors:
 - Usage trend analysis
 - **Monthly cost forecasting**
 
-### Export Support
+#### Export Support
 
 - PDF Reports with charts
 - CSV Export
@@ -334,7 +336,7 @@ Automatically scans and monitors:
 
 ---
 
-## Security & Compliance
+### Compliance & Security Monitoring
 
 - IAM policy analysis
 - Over-permission detection
@@ -349,7 +351,7 @@ Automatically scans and monitors:
 
 ---
 
-## Activity Monitoring
+### Activity Monitoring
 
 - CloudTrail integration
 - Infrastructure activity logs
@@ -359,7 +361,7 @@ Automatically scans and monitors:
 - Event audit trail
 - Change history tracking
 
-### Filters
+#### Filters
 
 - Service
 - User
@@ -369,7 +371,7 @@ Automatically scans and monitors:
 
 ---
 
-## AI-Powered Intelligence
+### AI Intelligence Features
 
 - **Natural Language Queries** - Ask about infrastructure in plain English
 - **Cost Analysis** - "What are my top cost drivers?"
@@ -391,7 +393,7 @@ Automatically scans and monitors:
 
 ---
 
-## Alerts & Notifications
+### Alerts & Notifications
 
 - Cost spike alerts
 - Resource utilization alerts
@@ -404,7 +406,7 @@ Automatically scans and monitors:
 
 ---
 
-## Team Management
+### Team Management
 
 - Invite team members
 - Assign team roles
@@ -416,7 +418,7 @@ Automatically scans and monitors:
 
 ---
 
-## Reports & Analytics
+### Reports & Analytics
 
 - Monthly cost reports
 - Security reports
@@ -429,50 +431,50 @@ Automatically scans and monitors:
 
 ---
 
-# Non-Functional Requirements
+## Non-Functional Requirements
 
-| Requirement | Target | Status |
-|---|---|---|
-| Bundle Size | < 150 KB gzipped | Achieved |
-| Page Load Time | < 2 seconds | Achieved |
-| API Response Time | < 3 seconds | Achieved |
-| Concurrent Users | 50+ | Supported |
-| Uptime | 99.5% | Achieved |
-| Encryption | HTTPS/TLS | Implemented |
-| Accessibility Score | Lighthouse 90+ | Achieved |
-| Test Coverage | Minimum 70% | Achieved |
-| TypeScript Errors | 0 | **Zero Errors** |
-| API Integration | 100% | **Complete** |
-
----
-
-# Technology Stack
-
-| Layer | Technology | Version |
-|---|---|---|
-| **Frontend** | React | 18 |
-| **Language** | TypeScript | 5.x |
-| **Build Tool** | Vite | 6 |
-| **Styling** | Tailwind CSS | 4 |
-| **UI Components** | Radix UI | Latest |
-| **Charts & Graphs** | Recharts | Latest |
-| **Forms** | React Hook Form | Latest |
-| **Validation** | Zod | Latest |
-| **State Management** | React Query | Latest |
-| **HTTP Client** | Fetch API | Native |
-| **Backend** | Flask | 3.x |
-| **Python Version** | Python | 3.9+ |
-| **AWS SDK** | boto3 | Latest |
-| **AI Integration** | Anthropic SDK | Latest |
-| **Database** | Supabase (PostgreSQL) | Latest |
-| **Authentication** | JWT + API Keys | Standard |
-| **Deployment** | Vercel + Railway | Latest |
-| **CI/CD** | GitHub Actions | Latest |
-| **Containerization** | Docker | Optional |
+| Requirement     | Target          | Status          |
+| --------------- | --------------- | --------------- |
+| Bundle Size     | < 150 KB gzip   | Achieved        |
+| Page Load Time  | < 2 seconds     | Achieved        |
+| API Response    | < 3 seconds     | Achieved        |
+| Concurrent Usrs | 50+             | Supported       |
+| Uptime          | 99.5%           | Achieved        |
+| Encryption      | HTTPS/TLS       | Implemented     |
+| Accessibility   | Lighthouse 90+  | Achieved        |
+| Test Coverage   | Minimum 70%     | Achieved        |
+| TypeScript      | 0               | **Zero Errors** |
+| API Integration | 100%            | **Complete**    |
 
 ---
 
-# Project Structure
+## Technology Stack
+
+| Layer          | Technology      | Version |
+| -------------- | --------------- | ------- |
+| Frontend       | React           | 18      |
+| Language       | TypeScript      | 5.x     |
+| Build Tool     | Vite            | 6       |
+| Styling        | Tailwind CSS    | 4       |
+| UI Components  | Radix UI        | Latest  |
+| Charts         | Recharts        | Latest  |
+| Forms          | React Hook Frm  | Latest  |
+| Validation     | Zod             | Latest  |
+| State Mgmt     | React Query     | Latest  |
+| HTTP Client    | Fetch API       | Native  |
+| Backend        | Flask           | 3.x     |
+| Python         | Python          | 3.9+    |
+| AWS SDK        | boto3           | Latest  |
+| AI Integration | Anthropic SDK   | Latest  |
+| Database       | Supabase        | Latest  |
+| Authentication | JWT + API Keys  | Std     |
+| Deployment     | Vercel+Railway  | Latest  |
+| CI/CD          | GitHub Actions  | Latest  |
+| Containerize   | Docker          | Opt     |
+
+---
+
+## Project Structure
 
 ```text
 ConsoleSensei-Cloud-Ops/
@@ -586,20 +588,20 @@ ConsoleSensei-Cloud-Ops/
 
 ---
 
-# Quick Start Guide
+## Quick Start Guide
 
 ## Prerequisites
 
 - **Node.js** 18+ and npm/yarn
 - **Python** 3.9+ and pip
 - **AWS Account** with credentials
-- **Anthropic API Key** for Claude AI (get from https://console.anthropic.com)
+- **Anthropic API Key** for Claude AI (get from [Anthropic Console](https://console.anthropic.com))
 
 ---
 
-## Installation
+### Installation
 
-### 1. Clone Repository
+#### 1. Clone Repository
 
 ```bash
 git clone https://github.com/mudassirfaaiz15/Multi-Cloud-Infrastructure-Intelligence-Platform.git
@@ -608,15 +610,15 @@ cd Multi-Cloud-Infrastructure-Intelligence-Platform
 
 ---
 
-## Frontend Setup
+### Frontend Setup
 
-### 2. Install Frontend Dependencies
+#### 2. Install Frontend Dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Configure Frontend Environment
+#### 3. Configure Frontend Environment
 
 Create `.env.local` in project root:
 
@@ -630,19 +632,19 @@ VITE_SUPABASE_URL=your-supabase-url
 VITE_SUPABASE_ANON_KEY=your-supabase-anon-key
 ```
 
-### 4. Start Frontend Server
+#### 4. Start Frontend Server
 
 ```bash
 npm run dev
 ```
 
-Frontend will be available at: **http://localhost:5173**
+Frontend will be available at: [http://localhost:5173](http://localhost:5173)
 
 ---
 
-## Backend Setup
+### Backend Setup
 
-### 5. Prepare Backend Environment
+#### 5. Prepare Backend Environment
 
 Navigate to backend directory:
 
@@ -650,7 +652,7 @@ Navigate to backend directory:
 cd backend
 ```
 
-### 6. Create Virtual Environment
+#### 6. Create Virtual Environment
 
 ```bash
 # Windows
@@ -662,13 +664,13 @@ python -m venv venv
 source venv/bin/activate
 ```
 
-### 7. Install Backend Dependencies
+#### 7. Install Backend Dependencies
 
 ```bash
 pip install -r requirements.txt
 ```
 
-### 8. Configure Backend Environment
+#### 8. Configure Backend Environment
 
 Create `.env` file in `backend/` directory:
 
@@ -689,39 +691,42 @@ PORT=5000
 DEBUG=True
 ```
 
-**⚠️ Important:** Get your `ANTHROPIC_API_KEY` from [Anthropic Console](https://console.anthropic.com)
+⚠️ **Important:** Get your `ANTHROPIC_API_KEY` from [Anthropic Console](https://console.anthropic.com)
 
-### 9. Start Backend Server
+#### 9. Start Backend Server
 
 ```bash
 python api.py
 ```
 
-Backend will be available at: **http://localhost:5000**
+Backend will be available at: [http://localhost:5000](http://localhost:5000)
 
 ---
 
-## Verify Installation
+### Verify Installation
 
-### Frontend Status
-- Navigate to http://localhost:5173
+#### Frontend Status
+
+- Navigate to [http://localhost:5173](http://localhost:5173)
 - Dashboard should load
 - AI Chat sidebar should be visible
 
-### Backend Status
+#### Backend Status
+
 - API health check: `curl http://localhost:5000/health` (if available)
 - Check terminal for Flask server logs
 
-### AI Integration Status
+#### AI Integration Status
+
 - Open AI Chat sidebar
 - Type a test query
 - Response should come from Claude API (or demo mode if offline)
 
 ---
 
-# Build & Deployment
+## Build & Deployment
 
-## Frontend Build
+### Frontend Build
 
 ```bash
 npm run build
@@ -729,7 +734,7 @@ npm run build
 
 This creates an optimized production bundle in `dist/` folder.
 
-### Deploy to Vercel
+#### Deploy to Vercel
 
 ```bash
 vercel --prod
@@ -737,16 +742,16 @@ vercel --prod
 
 ---
 
-## Backend Deployment
+### Backend Deployment
 
-### Docker Deployment
+#### Docker Deployment
 
 ```bash
 docker build -t console-sensei-backend .
 docker run -p 5000:5000 console-sensei-backend
 ```
 
-### Railway Deployment
+#### Railway Deployment
 
 ```bash
 railway up
@@ -754,11 +759,12 @@ railway up
 
 ---
 
-# Development
+## Development
 
-## Available Scripts
+### Available Scripts
 
-### Frontend
+#### Frontend
+
 ```bash
 npm run dev          # Start development server
 npm run build        # Build for production
@@ -768,7 +774,8 @@ npm test             # Run test suite
 npm test:coverage    # Generate coverage report
 ```
 
-### Backend
+#### Backend
+
 ```bash
 python api.py                 # Start Flask development server
 python -m pytest              # Run tests
@@ -777,40 +784,41 @@ python -m pytest --cov        # Generate coverage
 
 ---
 
-# Configuration
+## Configuration
 
-## Environment Variables Reference
+### Environment Variables Reference
 
-### Frontend (.env.local)
+#### Frontend (.env.local)
 
 | Variable | Required | Default | Purpose |
-|----------|----------|---------|---------|
-| `VITE_API_URL` | No | http://localhost:5000 | Backend API base URL |
+| --- | --- | --- | --- |
+| VITE_API_URL | No | [localhost](http://localhost:5000) | Backend API base URL |
 | `VITE_API_KEY` | No | demo-key | API authentication key |
 | `VITE_SUPABASE_URL` | No | - | Supabase project URL |
-| `VITE_SUPABASE_ANON_KEY` | No | - | Supabase anonymous key |
+| VITE_SUPABASE_ANON_KEY | No | - | Supabase anonymous key |
 
-### Backend (backend/.env)
+#### Backend (backend/.env)
 
 | Variable | Required | Default | Purpose |
-|----------|----------|---------|---------|
-| `FLASK_ENV` | Yes | production | Flask environment |
-| `SECRET_KEY` | Yes | - | Session/cookie secret |
-| `ANTHROPIC_API_KEY` | Yes | - | Claude API key |
-| `AWS_REGION` | No | us-east-1 | Default AWS region |
-| `PORT` | No | 5000 | Server port |
-| `DEBUG` | No | False | Debug mode |
+| --- | --- | --- | --- |
+| FLASK_ENV | Yes | production | Flask environment |
+| SECRET_KEY | Yes | - | Session/cookie secret |
+| ANTHROPIC_API_KEY | Yes | - | Claude API key |
+| AWS_REGION | No | us-east-1 | Default AWS region |
+| PORT | No | 5000 | Server port |
+| DEBUG | No | False | Debug mode |
 
 ---
 
-# Features Demo
+## Features Demo
 
-## AI Chat Example
+### AI Chat Example
 
 **User:** "What are my top 3 cost drivers?"
 
 **Claude Response:**
-```
+
+```text
 Based on your AWS environment analysis:
 
 1. EC2 Compute — $2,140/month (41%)
@@ -828,9 +836,10 @@ Based on your AWS environment analysis:
 Estimated savings opportunity: $489/month (9% reduction)
 ```
 
-## Demo Mode
+### Demo Mode
 
 When backend is offline, the platform displays realistic mock data:
+
 - Full dashboard functionality
 - Interactive charts and metrics
 - AI Chat with demo responses
@@ -838,7 +847,7 @@ When backend is offline, the platform displays realistic mock data:
 
 ---
 
-# Performance Optimizations
+## Performance Optimizations
 
 - **Code Splitting** - Lazy load components and routes
 - **Lazy Loading** - Dynamic imports for heavy modules
@@ -852,6 +861,7 @@ When backend is offline, the platform displays realistic mock data:
 - **Caching Strategy** - React Query cache management
 
 ### Results
+
 - **Bundle Size:** ~120 KB gzipped
 - **First Paint:** ~800ms
 - **Interactive:** ~1.2s
@@ -859,7 +869,9 @@ When backend is offline, the platform displays realistic mock data:
 
 ---
 
-# Security Features
+## Security Features
+
+- JWT Authentication with expiry
 
 - JWT Authentication with expiry
 - HTTPS/TLS Encryption
@@ -876,7 +888,7 @@ When backend is offline, the platform displays realistic mock data:
 
 ---
 
-# Testing
+## Testing
 
 ```bash
 # Frontend tests
@@ -891,6 +903,7 @@ python -m pytest --cov
 ```
 
 ### Test Coverage
+
 - Component Testing (70%)
 - API Testing (75%)
 - Hook Testing (80%)
@@ -899,7 +912,7 @@ python -m pytest --cov
 
 ---
 
-# Documentation
+## Documentation
 
 - **[Setup Guide](./LOCAL_SETUP_GUIDE.md)** - Complete local development setup
 - **[API Documentation](./docs/API_INTEGRATION.md)** - API endpoints and payloads
@@ -909,16 +922,18 @@ python -m pytest --cov
 
 ---
 
-# Architecture Highlights
+## Architecture Highlights
 
-## Frontend Architecture
+### Frontend Architecture
+
 - **Component-Based** - Reusable, modular components
 - **Custom Hooks** - AI service hooks for easy integration
 - **Context API** - Global state management
 - **React Query** - Server state management
 - **Vite + TypeScript** - Modern build tooling
 
-## Backend Architecture
+### Backend Architecture
+
 - **REST API** - Clean, RESTful endpoints
 - **Service Layer** - Separation of concerns
 - **AI Integration** - Claude API with fallback
@@ -926,7 +941,8 @@ python -m pytest --cov
 - **Error Handling** - Comprehensive error management
 - **Logging** - Structured logging system
 
-## AI Integration
+### AI Integration
+
 - **Claude 3.5 Sonnet** - Latest AI model
 - **Context Management** - Multi-turn conversations
 - **Fallback Mode** - Demo responses when offline
@@ -935,7 +951,7 @@ python -m pytest --cov
 
 ---
 
-# Browser Support
+## Browser Support
 
 - Chrome 90+
 - Firefox 88+
@@ -945,7 +961,7 @@ python -m pytest --cov
 
 ---
 
-# Known Limitations
+## Known Limitations
 
 - Real AWS integration requires valid credentials
 - CloudTrail requires CloudTrail enabled on AWS account
@@ -954,15 +970,17 @@ python -m pytest --cov
 
 ---
 
-# Roadmap
+## Roadmap
 
 ### Phase 2 (Q3 2026)
+
 - [ ] Slack Integration
 - [ ] Terraform Integration
 - [ ] Advanced Scheduling
 - [ ] Custom Dashboard Widgets
 
 ### Phase 3 (Q4 2026)
+
 - [ ] Multi-Cloud Support (GCP, Azure)
 - [ ] Machine Learning Predictions
 - [ ] Advanced Compliance Reporting
@@ -970,7 +988,7 @@ python -m pytest --cov
 
 ---
 
-# Key Highlights
+## Key Highlights
 
 **AI-Powered Intelligence** - Claude integration for natural language queries
 **Zero TypeScript Errors** - Production-ready code quality
@@ -986,10 +1004,10 @@ python -m pytest --cov
 
 ---
 
-# Performance Benchmarks
+## Performance Benchmarks
 
 | Metric | Target | Achieved |
-|--------|--------|----------|
+| --- | --- | --- |
 | Lighthouse Score | 90+ | 94 |
 | Page Load Time | 2s | 1.2s |
 | API Response | 3s | 1.5s |
@@ -999,23 +1017,29 @@ python -m pytest --cov
 
 ---
 
-# Troubleshooting
+## Troubleshooting
 
 ### Issue: "Cannot connect to backend API"
+
 **Solution:**
+
 1. Ensure Flask backend is running: `python api.py`
 2. Check `VITE_API_URL` in `.env.local`
 3. Verify backend on `http://localhost:5000`
 
 ### Issue: "AI Chat not responding"
+
 **Solution:**
+
 1. Verify `ANTHROPIC_API_KEY` is set in `backend/.env`
-2. Check API key is valid at https://console.anthropic.com
+2. Check API key is valid at [Anthropic Console](https://console.anthropic.com)
 3. Restart backend server
 4. Check browser console for errors
 
 ### Issue: "TypeScript compilation errors"
+
 **Solution:**
+
 ```bash
 # Clear cache and reinstall
 rm -rf node_modules package-lock.json
@@ -1024,7 +1048,9 @@ npm run build
 ```
 
 ### Issue: "Port 5000 or 5173 already in use"
+
 **Solution:**
+
 ```bash
 # Change ports
 npm run dev -- --port 5174
@@ -1033,7 +1059,7 @@ PORT=5001 python api.py
 
 ---
 
-# Contributing
+## Contributing
 
 Contributions are welcome! Please:
 
@@ -1046,7 +1072,7 @@ See [Contributing Guide](./docs/CONTRIBUTING.md) for details.
 
 ---
 
-# Conclusion
+## Conclusion
 
 **CONSOLE SENSEI CLOUD OPS** is a production-ready cloud operations intelligence platform that combines:
 
@@ -1061,7 +1087,7 @@ It demonstrates strong engineering practices, scalable architecture, enterprise-
 
 ---
 
-# Support & Contact
+## Support & Contact
 
 - **GitHub Issues** - Report bugs or request features
 - **GitHub Discussions** - Ask questions and share ideas
@@ -1069,34 +1095,9 @@ It demonstrates strong engineering practices, scalable architecture, enterprise-
 
 ---
 
-# License
+## License
 
 This project is licensed under the **MIT License** - see LICENSE file for details.
 
 ---
 
-<div align="center">
-
-# CONSOLE SENSEI CLOUD OPS
-
-### Intelligent Cloud Operations Platform with AI-Powered Insights
-
-<br>
-
-## Engineered & Developed By
-
-### **Mudassir Faaiz Mohammed**
-
-**CloudOps • DevOps • Full Stack • AWS • AI Integration**
-
-<br>
-
-### If you found this project helpful, please consider giving it a star!
-
-### [GitHub](https://github.com/mudassirfaaiz15) • [LinkedIn](https://www.linkedin.com/in/mudassirfaaiz15/)
-
-<br>
-
-**Made with ❤️ for the Cloud Operations Community**
-
-</div>
