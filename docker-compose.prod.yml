@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    container_name: consolesensei-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - PORT=5000
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-me-in-production}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-us-east-1}
+    volumes:
+      - ./backend:/app
+    networks:
+      - consolesensei
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    container_name: consolesensei-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_URL=http://backend:5000
+    depends_on:
+      - backend
+    volumes:
+      - ./src:/app/src
+      - ./public:/app/public
+    networks:
+      - consolesensei
+
+  nginx:
+    image: nginx:alpine
+    container_name: consolesensei-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/nginx/certs:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - consolesensei
+
+networks:
+  consolesensei:
+    driver: bridge
