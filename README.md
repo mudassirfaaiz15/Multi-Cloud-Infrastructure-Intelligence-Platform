@@ -41,9 +41,9 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 
 ---
 
-# 🎯 What's New (May 2026)
+# What's New (May 2026)
 
-## ✨ AI-Powered Features
+## AI-Powered Features
 
 - **Claude AI Chat Integration** - Ask natural language questions about your cloud infrastructure
 - **Intelligent Cost Analysis** - AI-powered cost optimization recommendations
@@ -51,7 +51,7 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 - **Security Insights** - AI-generated security recommendations
 - **Usage Forecasting** - Predict future costs and resource utilization
 
-## 🔧 Technical Improvements
+## Technical Improvements
 
 - **Zero TypeScript Errors** - Complete compilation without warnings
 - **Real-time API Integration** - All dashboard pages connected to backend APIs
@@ -65,52 +65,52 @@ Built using **React 18 + TypeScript + Vite** on the frontend and **Flask + boto3
 # Core Features
 
 ## Cloud Infrastructure Management
-- ✅ AWS Resource Discovery & Inventory
-- ✅ Multi-Region Cloud Monitoring
-- ✅ Real-Time Infrastructure Visibility
-- ✅ Resource Status & Health Monitoring
-- ✅ Idle Resource Detection
-- ✅ Infrastructure Change Tracking
+- AWS Resource Discovery & Inventory
+- Multi-Region Cloud Monitoring
+- Real-Time Infrastructure Visibility
+- Resource Status & Health Monitoring
+- Idle Resource Detection
+- Infrastructure Change Tracking
 
 ## Finance & Cost Operations
-- ✅ Real-Time Cost Intelligence Dashboard
-- ✅ Cost Breakdown by Service, Region, Account
-- ✅ Budget Threshold Alerts
-- ✅ AI-Powered Cost Optimization Recommendations
-- ✅ Usage Trend Analysis & Forecasting
-- ✅ Monthly Cost Reports
+- Real-Time Cost Intelligence Dashboard
+- Cost Breakdown by Service, Region, Account
+- Budget Threshold Alerts
+- AI-Powered Cost Optimization Recommendations
+- Usage Trend Analysis & Forecasting
+- Monthly Cost Reports
 
 ## Security & Compliance
-- ✅ IAM Security & Compliance Auditing
-- ✅ Security Posture Scoring (0-100)
-- ✅ Over-Permission Detection
-- ✅ Vulnerability Risk Assessment
-- ✅ CloudTrail Activity Monitoring
-- ✅ AWS Security Hub Integration
+- IAM Security & Compliance Auditing
+- Security Posture Scoring (0-100)
+- Over-Permission Detection
+- Vulnerability Risk Assessment
+- CloudTrail Activity Monitoring
+- AWS Security Hub Integration
 
 ## Operations & Monitoring
-- ✅ Real-Time Activity Logging
-- ✅ CloudTrail Event Tracking
-- ✅ Infrastructure Change Auditing
-- ✅ User Activity Monitoring
-- ✅ Event Filtering & Search
-- ✅ Operational Analytics Dashboard
+- Real-Time Activity Logging
+- CloudTrail Event Tracking
+- Infrastructure Change Auditing
+- User Activity Monitoring
+- Event Filtering & Search
+- Operational Analytics Dashboard
 
 ## Collaboration & Reporting
-- ✅ Multi-Account Cloud Management
-- ✅ Team Collaboration & RBAC
-- ✅ PDF & CSV Export Reports
-- ✅ Shareable Report Links
-- ✅ Role-Based Access Control
-- ✅ Team Member Invitations
+- Multi-Account Cloud Management
+- Team Collaboration & RBAC
+- PDF & CSV Export Reports
+- Shareable Report Links
+- Role-Based Access Control
+- Team Member Invitations
 
 ## AI-Powered Intelligence
-- ✅ Claude AI Chat Sidebar
-- ✅ Natural Language Infrastructure Queries
-- ✅ AI Cost Anomaly Detection
-- ✅ Intelligent Recommendations Engine
-- ✅ Cloud Operations Assistant
-- ✅ Multi-Query Context Support
+- Claude AI Chat Sidebar
+- Natural Language Infrastructure Queries
+- AI Cost Anomaly Detection
+- Intelligent Recommendations Engine
+- Cloud Operations Assistant
+- Multi-Query Context Support
 
 ---
 
@@ -250,7 +250,7 @@ GET    /api/v1/monitoring/alerts    - Active alerts
 GET    /api/v1/monitoring/metrics   - Performance metrics
 ```
 
-## AI Chat Endpoints (🎯 NEW)
+## AI Chat Endpoints (NEW)
 ```
 POST   /api/v1/ai/chat              - AI chat query
 GET    /api/v1/ai/usage             - AI usage statistics
@@ -320,10 +320,10 @@ Automatically scans and monitors:
   - AWS Account
   - Cost Center
 - Budget threshold alerts
-- **AI-Powered cost optimization recommendations** ✨
+- **AI-Powered cost optimization recommendations**
 - Cloud spending visualization
 - Usage trend analysis
-- **Monthly cost forecasting** ✨
+- **Monthly cost forecasting**
 
 ### Export Support
 
@@ -343,8 +343,8 @@ Automatically scans and monitors:
 - Security posture visualization
 - Risk detection engine
 - Vulnerability visibility
-- **Security Hub integration** ✨
-- **CloudTrail audit logging** ✨
+- **Security Hub integration**
+- **CloudTrail audit logging**
 - Compliance reports
 
 ---
@@ -369,7 +369,7 @@ Automatically scans and monitors:
 
 ---
 
-## AI-Powered Intelligence ✨
+## AI-Powered Intelligence
 
 - **Natural Language Queries** - Ask about infrastructure in plain English
 - **Cost Analysis** - "What are my top cost drivers?"
@@ -433,16 +433,16 @@ Automatically scans and monitors:
 
 | Requirement | Target | Status |
 |---|---|---|
-| Bundle Size | < 150 KB gzipped | ✅ Achieved |
-| Page Load Time | < 2 seconds | ✅ Achieved |
-| API Response Time | < 3 seconds | ✅ Achieved |
-| Concurrent Users | 50+ | ✅ Supported |
-| Uptime | 99.5% | ✅ Achieved |
-| Encryption | HTTPS/TLS | ✅ Implemented |
-| Accessibility Score | Lighthouse 90+ | ✅ Achieved |
-| Test Coverage | Minimum 70% | ✅ Achieved |
-| TypeScript Errors | 0 | ✅ **Zero Errors** |
-| API Integration | 100% | ✅ **Complete** |
+| Bundle Size | < 150 KB gzipped | Achieved |
+| Page Load Time | < 2 seconds | Achieved |
+| API Response Time | < 3 seconds | Achieved |
+| Concurrent Users | 50+ | Supported |
+| Uptime | 99.5% | Achieved |
+| Encryption | HTTPS/TLS | Implemented |
+| Accessibility Score | Lighthouse 90+ | Achieved |
+| Test Coverage | Minimum 70% | Achieved |
+| TypeScript Errors | 0 | **Zero Errors** |
+| API Integration | 100% | **Complete** |
 
 ---
 
@@ -831,10 +831,10 @@ Estimated savings opportunity: $489/month (9% reduction)
 ## Demo Mode
 
 When backend is offline, the platform displays realistic mock data:
-- ✅ Full dashboard functionality
-- ✅ Interactive charts and metrics
-- ✅ AI Chat with demo responses
-- ✅ All features except real API data
+- Full dashboard functionality
+- Interactive charts and metrics
+- AI Chat with demo responses
+- All features except real API data
 
 ---
 
@@ -861,18 +861,18 @@ When backend is offline, the platform displays realistic mock data:
 
 # Security Features
 
-- ✅ JWT Authentication with expiry
-- ✅ HTTPS/TLS Encryption
-- ✅ Secure credential handling
-- ✅ Role-Based Access Control (RBAC)
-- ✅ API Key Authentication
-- ✅ Protected API Routes
-- ✅ Token refresh mechanism
-- ✅ Input validation with Zod
-- ✅ XSS Protection
-- ✅ CSRF Prevention
-- ✅ Rate Limiting
-- ✅ Audit Logging
+- JWT Authentication with expiry
+- HTTPS/TLS Encryption
+- Secure credential handling
+- Role-Based Access Control (RBAC)
+- API Key Authentication
+- Protected API Routes
+- Token refresh mechanism
+- Input validation with Zod
+- XSS Protection
+- CSRF Prevention
+- Rate Limiting
+- Audit Logging
 
 ---
 
@@ -891,11 +891,11 @@ python -m pytest --cov
 ```
 
 ### Test Coverage
-- ✅ Component Testing (70%)
-- ✅ API Testing (75%)
-- ✅ Hook Testing (80%)
-- ✅ Integration Testing (65%)
-- ✅ E2E Testing (Coming Soon)
+- Component Testing (70%)
+- API Testing (75%)
+- Hook Testing (80%)
+- Integration Testing (65%)
+- E2E Testing (Coming Soon)
 
 ---
 
@@ -937,11 +937,11 @@ python -m pytest --cov
 
 # Browser Support
 
-- ✅ Chrome 90+
-- ✅ Firefox 88+
-- ✅ Safari 14+
-- ✅ Edge 90+
-- ✅ Mobile Chrome/Safari
+- Chrome 90+
+- Firefox 88+
+- Safari 14+
+- Edge 90+
+- Mobile Chrome/Safari
 
 ---
 
@@ -972,17 +972,17 @@ python -m pytest --cov
 
 # Key Highlights
 
-✨ **AI-Powered Intelligence** - Claude integration for natural language queries
-✨ **Zero TypeScript Errors** - Production-ready code quality
-✨ **Real-time API Integration** - All components connected to live data
-✨ **Demo Mode** - Test without API keys
-✨ **Enterprise-grade Security** - JWT, RBAC, encryption
-✨ **AWS Multi-Service Support** - 13+ AWS services monitored
-✨ **FinOps Dashboard** - Real-time cost intelligence
-✨ **Security Audit** - IAM analysis and compliance
-✨ **CloudTrail Integration** - Activity monitoring
-✨ **Scalable Architecture** - Handles 50+ concurrent users
-✨ **Rapid Deployment** - Vercel + Railway ready
+**AI-Powered Intelligence** - Claude integration for natural language queries
+**Zero TypeScript Errors** - Production-ready code quality
+**Real-time API Integration** - All components connected to live data
+**Demo Mode** - Test without API keys
+**Enterprise-grade Security** - JWT, RBAC, encryption
+**AWS Multi-Service Support** - 13+ AWS services monitored
+**FinOps Dashboard** - Real-time cost intelligence
+**Security Audit** - IAM analysis and compliance
+**CloudTrail Integration** - Activity monitoring
+**Scalable Architecture** - Handles 50+ concurrent users
+**Rapid Deployment** - Vercel + Railway ready
 
 ---
 
@@ -1050,12 +1050,12 @@ See [Contributing Guide](./docs/CONTRIBUTING.md) for details.
 
 **CONSOLE SENSEI CLOUD OPS** is a production-ready cloud operations intelligence platform that combines:
 
-- 🎯 **Real-time Infrastructure Visibility** - See all your AWS resources
-- 💰 **Intelligent FinOps** - Optimize cloud spending with AI insights
-- 🔐 **Security Auditing** - Detect and remediate security risks
-- 📊 **Operational Analytics** - Understand infrastructure changes
-- 👥 **Team Collaboration** - Manage access and permissions
-- 🤖 **AI-Powered Insights** - Claude-powered cloud assistant
+- **Real-time Infrastructure Visibility** - See all your AWS resources
+- **Intelligent FinOps** - Optimize cloud spending with AI insights
+- **Security Auditing** - Detect and remediate security risks
+- **Operational Analytics** - Understand infrastructure changes
+- **Team Collaboration** - Manage access and permissions
+- **AI-Powered Insights** - Claude-powered cloud assistant
 
 It demonstrates strong engineering practices, scalable architecture, enterprise-grade AWS integration, and modern cloud operations expertise.
 
@@ -1091,9 +1091,9 @@ This project is licensed under the **MIT License** - see LICENSE file for detail
 
 <br>
 
-### 🌟 If you found this project helpful, please consider giving it a star!
+### If you found this project helpful, please consider giving it a star!
 
-### 🔗 [GitHub](https://github.com/mudassirfaaiz15) • [LinkedIn](https://linkedin.com) • [Twitter](https://twitter.com)
+### [GitHub](https://github.com/mudassirfaaiz15) • [LinkedIn](https://linkedin.com) • [Twitter](https://twitter.com)
 
 <br>
 
