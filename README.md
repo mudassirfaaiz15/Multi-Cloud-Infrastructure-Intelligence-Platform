@@ -1093,7 +1093,7 @@ This project is licensed under the **MIT License** - see LICENSE file for detail
 
 ### If you found this project helpful, please consider giving it a star!
 
-### [GitHub](https://github.com/mudassirfaaiz15) • [LinkedIn](https://linkedin.com) • [Twitter](https://twitter.com)
+### [GitHub](https://github.com/mudassirfaaiz15) • [LinkedIn](https://www.linkedin.com/in/mudassirfaaiz15/)
 
 <br>
 
