@@ -761,6 +761,84 @@ def natural_language_query():
 
 
 # ============================================================================
+# AI ASSISTANT ENDPOINTS
+# ============================================================================
+
+@app.route('/api/v1/ai/chat', methods=['POST'])
+@require_api_key
+def ai_chat():
+    """
+    AI-powered cloud analytics chat endpoint
+    
+    Request body:
+    {
+        "question": "What is my biggest cost driver?",
+        "context": {
+            "costs": {...},
+            "security_findings": [...],
+            "resources": {...}
+        }
+    }
+    """
+    try:
+        from services.ai_usage_monitor import AIQueryEngine
+        
+        data = request.get_json() or {}
+        question = data.get('question', '').strip()
+        context = data.get('context', {})
+        
+        if not question:
+            return jsonify({'success': False, 'error': 'question is required'}), 400
+        
+        anthropic_key = os.environ.get('ANTHROPIC_API_KEY')
+        engine = AIQueryEngine(api_key=anthropic_key)
+        result = engine.query(question, context=context)
+        
+        return jsonify({
+            'success': result.get('success', True),
+            'data': result
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"AI chat error: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+@app.route('/api/v1/ai/usage', methods=['GET'])
+@require_api_key
+def ai_usage_stats():
+    """
+    Get AI API usage statistics
+    
+    Query parameters:
+    - days: Number of days to look back (default: 30)
+    """
+    try:
+        from services.ai_usage_monitor import AIUsageMonitor
+        
+        days = int(request.args.get('days', 30))
+        anthropic_key = os.environ.get('ANTHROPIC_API_KEY')
+        
+        monitor = AIUsageMonitor(api_key=anthropic_key)
+        stats = monitor.get_usage_stats(days=days)
+        
+        return jsonify({
+            'success': True,
+            'data': stats
+        }), 200
+        
+    except Exception as e:
+        logger.error(f"AI usage stats error: {e}")
+        return jsonify({
+            'success': False,
+            'error': str(e)
+        }), 500
+
+
+# ============================================================================
 # APPLICATION INITIALIZATION
 # ============================================================================
 

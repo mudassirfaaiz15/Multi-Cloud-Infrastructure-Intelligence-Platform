@@ -1,5 +1,14 @@
 /// <reference types="vite/client" />
 
+declare global {
+    interface ImportMetaEnv {
+        readonly VITE_API_URL?: string;
+        readonly VITE_API_KEY?: string;
+        readonly VITE_SUPABASE_URL?: string;
+        readonly VITE_SUPABASE_ANON_KEY?: string;
+    }
+}
+
 // Declaration for modules without type definitions
 declare module 'lucide-react' {
     import { FC, SVGProps } from 'react';

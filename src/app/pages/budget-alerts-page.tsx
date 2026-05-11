@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
 import { Badge } from '@/app/components/ui/badge';
@@ -18,10 +18,11 @@ import {
     Edit,
 } from 'lucide-react';
 import { notifications } from '@/lib/notifications';
-import { type Budget, type BudgetAlert, getBudgetPercentage, getBudgetStatus } from '@/lib/api/budgets';
+import { type Budget, type BudgetAlert, getBudgetPercentage, getBudgetStatus, getBudgets } from '@/lib/api/budgets';
+import { logger } from '@/lib/utils/logger';
 
-// Mock data
-const BUDGETS: Budget[] = [
+// Fallback demo data
+const DEMO_BUDGETS: Budget[] = [
     {
         id: 'budget-1',
         name: 'Monthly AWS Spend',
@@ -60,7 +61,7 @@ const BUDGETS: Budget[] = [
     },
 ];
 
-const ALERTS: BudgetAlert[] = [
+const DEMO_ALERTS: BudgetAlert[] = [
     {
         id: 'alert-1',
         budgetId: 'budget-1',
@@ -84,11 +85,43 @@ const ALERTS: BudgetAlert[] = [
 ];
 
 export function BudgetAlertsPage() {
-    const [budgets, setBudgets] = useState<Budget[]>(BUDGETS);
-    const [alerts, setAlerts] = useState<BudgetAlert[]>(ALERTS);
+    const [budgets, setBudgets] = useState<Budget[]>(DEMO_BUDGETS);
+    const [alerts, setAlerts] = useState<BudgetAlert[]>(DEMO_ALERTS);
     const [createDialogOpen, setCreateDialogOpen] = useState(false);
     const [selectedBudget, setSelectedBudget] = useState<Budget | null>(null);
     const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const loadBudgets = async () => {
+            try {
+                const data = await getBudgets();
+                if (data && data.budgets) {
+                    setBudgets(data.budgets);
+                    setAlerts(data.budgets.flatMap(b =>
+                        b.alertThresholds?.map(threshold => ({
+                            id: `alert-${b.id}-${threshold}`,
+                            budgetId: b.id,
+                            budgetName: b.name,
+                            threshold,
+                            currentSpend: b.spent,
+                            budgetAmount: b.amount,
+                            timestamp: new Date().toISOString(),
+                            acknowledged: false,
+                        })) || []
+                    ) as BudgetAlert[]);
+                }
+            } catch (error) {
+                logger.error(`Failed to load budgets: ${error}`);
+                setBudgets(DEMO_BUDGETS);
+                setAlerts(DEMO_ALERTS);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadBudgets();
+    }, []);
 
     const totalBudget = budgets.reduce((sum, b) => sum + b.amount, 0);
     const totalSpent = budgets.reduce((sum, b) => sum + b.spent, 0);

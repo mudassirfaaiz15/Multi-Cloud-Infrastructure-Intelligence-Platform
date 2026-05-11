@@ -5,3 +5,4 @@ export * from './security';
 export * from './team';
 export * from './activity';
 export * from './budgets';
+export * from './ai';

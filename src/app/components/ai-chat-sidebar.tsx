@@ -4,8 +4,13 @@ import { Bot, Send, MessageCircle } from 'lucide-react';
 import { X, Trash2, Sparkles } from 'lucide-react';
 import { Button } from '@/app/components/ui/button';
 import { cn } from '@/app/components/ui/utils';
+import { logger } from '@/lib/utils/logger';
 
-interface Message { role: 'user' | 'ai'; text: string; ts: number; }
+interface Message { 
+  role: 'user' | 'ai'; 
+  text: string; 
+  ts: number;
+}
 
 const SUGGESTIONS = [
   'What is my biggest cost driver?',
@@ -14,7 +19,40 @@ const SUGGESTIONS = [
   'Show savings recommendations',
 ];
 
-function aiReply(q: string): string {
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+async function queryAI(question: string, context?: Record<string, unknown>): Promise<string> {
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/v1/ai/chat`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-Key': process.env.REACT_APP_API_KEY || 'demo-key',
+      },
+      body: JSON.stringify({
+        question,
+        context: context || {},
+      }),
+    });
+
+    if (!response.ok) {
+      logger.warn(`AI API returned status ${response.status}`);
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data.success && data.data) {
+      return data.data.answer || 'No response from AI';
+    }
+    throw new Error(data.error || 'Unknown API error');
+  } catch (error) {
+    logger.error(`Failed to query AI: ${error}`);
+    // Provide intelligent fallback responses
+    return generateFallbackResponse(question);
+  }
+}
+
+function generateFallbackResponse(q: string): string {
   const ql = q.toLowerCase();
   if (ql.includes('anomaly') || ql.includes('spike'))
     return 'The anomaly on Mar 10 was caused by an EC2 Auto Scaling event that launched 18 additional instances during a traffic surge in us-east-1. The root cause was a misconfigured CloudWatch alarm threshold. Recommendation: set a scaling cooldown period of 300s to avoid repeated triggers.';
@@ -38,6 +76,7 @@ const STORAGE_KEY = 'consoleSensei_chat_history';
 export function AIChatSidebar({ open, onClose }: { open: boolean, onClose: () => void }) {
   const [input, setInput]     = useState('');
   const [typing, setTyping]   = useState(false);
+  const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY);
@@ -55,16 +94,30 @@ export function AIChatSidebar({ open, onClose }: { open: boolean, onClose: () =>
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, typing]);
 
-  function send(text = input.trim()) {
-    if (!text) return;
+  async function send(text = input.trim()) {
+    if (!text || loading) return;
+    
     const userMsg: Message = { role: 'user', text, ts: Date.now() };
     setMessages(prev => [...prev, userMsg]);
     setInput('');
+    setLoading(true);
     setTyping(true);
-    setTimeout(() => {
+    
+    try {
+      const answer = await queryAI(text);
       setTyping(false);
-      setMessages(prev => [...prev, { role: 'ai', text: aiReply(text), ts: Date.now() }]);
-    }, 900 + Math.random() * 600);
+      setMessages(prev => [...prev, { role: 'ai', text: answer, ts: Date.now() }]);
+    } catch (error) {
+      logger.error(`Send error: ${error}`);
+      setTyping(false);
+      setMessages(prev => [...prev, { 
+        role: 'ai', 
+        text: 'Sorry, I encountered an error processing your request. Please try again.', 
+        ts: Date.now() 
+      }]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (!open) return null;
@@ -173,7 +226,7 @@ export function AIChatSidebar({ open, onClose }: { open: boolean, onClose: () =>
                 className="flex-1 bg-transparent text-sm resize-none outline-none placeholder:text-muted-foreground max-h-28 scrollbar-none"
                 aria-label="Chat input"
               />
-              <Button size="icon" className="h-7 w-7 shrink-0 rounded-lg" onClick={() => send()} disabled={!input.trim() || typing} aria-label="Send message">
+              <Button size="icon" className="h-7 w-7 shrink-0 rounded-lg" onClick={() => send()} disabled={!input.trim() || loading} aria-label="Send message">
                 <Send className="w-3.5 h-3.5" />
               </Button>
             </div>

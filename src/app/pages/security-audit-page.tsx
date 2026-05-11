@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/app/components/ui/card';
 import { Button } from '@/app/components/ui/button';
 import { Badge } from '@/app/components/ui/badge';
@@ -19,19 +19,18 @@ import {
     ChevronRight,
     AlertCircle,
 } from 'lucide-react';
+import { getSecurityFindings, type SecurityFinding } from '@/lib/api/security';
+import { logger } from '@/lib/utils/logger';
 
-interface SecurityFinding {
-    id: string;
-    title: string;
-    description: string;
-    severity: 'critical' | 'high' | 'medium' | 'low';
-    category: string;
-    affectedResources: number;
-    status: 'open' | 'in_progress' | 'resolved';
-    recommendation: string;
-}
+const COMPLIANCE_CHECKS = [
+    { name: 'CIS AWS Foundations', passed: 42, total: 55, percentage: 76 },
+    { name: 'AWS Well-Architected', passed: 38, total: 50, percentage: 76 },
+    { name: 'SOC 2 Controls', passed: 28, total: 35, percentage: 80 },
+    { name: 'PCI DSS', passed: 22, total: 30, percentage: 73 },
+];
 
-const SECURITY_FINDINGS: SecurityFinding[] = [
+// Fallback demo data
+const DEMO_FINDINGS: SecurityFinding[] = [
     {
         id: 'sec-1',
         title: 'S3 Buckets with Public Access',
@@ -104,13 +103,6 @@ const SECURITY_FINDINGS: SecurityFinding[] = [
     },
 ];
 
-const COMPLIANCE_CHECKS = [
-    { name: 'CIS AWS Foundations', passed: 42, total: 55, percentage: 76 },
-    { name: 'AWS Well-Architected', passed: 38, total: 50, percentage: 76 },
-    { name: 'SOC 2 Controls', passed: 28, total: 35, percentage: 80 },
-    { name: 'PCI DSS', passed: 22, total: 30, percentage: 73 },
-];
-
 const CATEGORY_ICONS: Record<string, typeof Shield> = {
     'Data Exposure': HardDrive,
     'Identity & Access': Key,
@@ -135,17 +127,35 @@ const STATUS_CONFIG = {
 export function SecurityAuditPage() {
     const [activeTab, setActiveTab] = useState('findings');
     const [severityFilter, setSeverityFilter] = useState<string | null>(null);
+    const [findings, setFindings] = useState<SecurityFinding[]>(DEMO_FINDINGS);
+    const [loading, setLoading] = useState(true);
 
-    const openFindings = SECURITY_FINDINGS.filter(f => f.status === 'open');
-    const criticalCount = SECURITY_FINDINGS.filter(f => f.severity === 'critical' && f.status !== 'resolved').length;
-    const highCount = SECURITY_FINDINGS.filter(f => f.severity === 'high' && f.status !== 'resolved').length;
+    useEffect(() => {
+        const loadFindings = async () => {
+            try {
+                const data = await getSecurityFindings();
+                setFindings(data.findings || DEMO_FINDINGS);
+            } catch (error) {
+                logger.error(`Failed to load security findings: ${error}`);
+                setFindings(DEMO_FINDINGS);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        loadFindings();
+    }, []);
+
+    const openFindings = findings.filter(f => f.status === 'open');
+    const criticalCount = findings.filter(f => f.severity === 'critical' && f.status !== 'resolved').length;
+    const highCount = findings.filter(f => f.severity === 'high' && f.status !== 'resolved').length;
 
     const filteredFindings = severityFilter
-        ? SECURITY_FINDINGS.filter(f => f.severity === severityFilter)
-        : SECURITY_FINDINGS;
+        ? findings.filter(f => f.severity === severityFilter)
+        : findings;
 
     const securityScore = Math.round(
-        (SECURITY_FINDINGS.filter(f => f.status === 'resolved').length / SECURITY_FINDINGS.length) * 100
+        (findings.filter(f => f.status === 'resolved').length / findings.length) * 100
     );
 
     return (
@@ -200,13 +210,13 @@ export function SecurityAuditPage() {
                             </div>
                             <div className="p-4 rounded-lg bg-background">
                                 <div className="text-2xl font-bold text-amber-500">
-                                    {SECURITY_FINDINGS.filter(f => f.severity === 'medium' && f.status !== 'resolved').length}
+                                    {findings.filter(f => f.severity === 'medium' && f.status !== 'resolved').length}
                                 </div>
                                 <div className="text-xs text-muted-foreground">Medium</div>
                             </div>
                             <div className="p-4 rounded-lg bg-background">
                                 <div className="text-2xl font-bold text-blue-500">
-                                    {SECURITY_FINDINGS.filter(f => f.severity === 'low' && f.status !== 'resolved').length}
+                                    {findings.filter(f => f.severity === 'low' && f.status !== 'resolved').length}
                                 </div>
                                 <div className="text-xs text-muted-foreground">Low</div>
                             </div>
