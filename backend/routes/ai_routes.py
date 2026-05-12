@@ -340,43 +340,36 @@ def ai_chat():
 
 def build_infrastructure_context(context_config: Dict[str, Any]) -> str:
     """
-    Build infrastructure context summary for Claude
+    Build infrastructure context summary for Claude using real database data.
     
-    In production, this would fetch actual data from:
-    - AWS APIs (EC2, RDS, Lambda, S3 counts)
-    - CloudWatch metrics
-    - Cost Explorer
-    - Security Hub
+    Fetches actual data from:
+    - Resource table (EC2, RDS, Lambda, S3 counts)
+    - CostSnapshot table (cost trends)
+    - SecurityFinding table (security findings)
+    - Anomaly table (recent anomalies)
     """
-    # TODO: Implement real data retrieval from AWS
+    from database import get_db_session
+    from services.infrastructure_aggregator import get_aggregator
     
-    context_parts = []
-    
-    if context_config.get('include_metrics', True):
-        context_parts.append("""AWS Infrastructure Summary:
-- EC2 Instances: 24 running, 3 stopped
-- RDS Databases: 5 active
-- Lambda Functions: 42 deployed
-- S3 Buckets: 8 buckets, 2.3TB storage
-""")
-    
-    if context_config.get('include_costs', True):
-        context_parts.append("""Current Spending:
-- AWS Monthly Cost: $5,701 (18% increase from last month)
-- Primary driver: EC2 (54% of spend)
-- Secondary: RDS (23% of spend)
-- Tertiary: Data transfer (15% of spend)
-""")
-    
-    if context_config.get('include_security', False):
-        context_parts.append("""Security Status:
-- Critical findings: 3
-- High severity: 12
-- Medium severity: 28
-- Unencrypted resources: 2
-""")
-    
-    return "\n".join(context_parts) if context_parts else "No infrastructure data available"
+    try:
+        db_session = get_db_session()
+        aggregator = get_aggregator(db_session)
+        
+        # Get account ID from context or use default
+        account_id = context_config.get('account_id', 'default')
+        
+        # Build context with real data
+        context = aggregator.build_context_string(
+            account_id=account_id,
+            include_metrics=context_config.get('include_metrics', True),
+            include_costs=context_config.get('include_costs', True),
+            include_security=context_config.get('include_security', False)
+        )
+        
+        return context
+    except Exception as e:
+        logger.error(f"Error building infrastructure context: {str(e)}")
+        return "Infrastructure data temporarily unavailable. Please try again."
 
 
 def determine_system_prompt(question: str) -> str:
