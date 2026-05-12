@@ -11,7 +11,7 @@ async function retryWithExponentialBackoff<T>(
     initialDelayMs: number = 1000
 ): Promise<T> {
     let lastError: Error | null = null;
-    
+
     for (let attempt = 0; attempt < maxRetries; attempt++) {
         try {
             return await fn();
@@ -24,7 +24,7 @@ async function retryWithExponentialBackoff<T>(
             }
         }
     }
-    
+
     throw lastError || new Error('Max retries exceeded');
 }
 
@@ -35,21 +35,21 @@ function validateApiResponse<T>(data: unknown, expectedFields: string[]): T {
     if (!data || typeof data !== 'object') {
         throw new Error('Invalid API response: not an object');
     }
-    
+
     const obj = data as Record<string, unknown>;
     for (const field of expectedFields) {
         if (!(field in obj)) {
             throw new Error(`Invalid API response: missing field '${field}'`);
         }
     }
-    
+
     return data as T;
 }
 
 /**
  * Map backend AWS resource to frontend Resource type
  */
-function mapBackendResourceToFrontend(backendResource: any): Resource {
+function mapBackendResourceToFrontend(backendResource: Record<string, unknown>): Resource {
     const statusMap: Record<string, ResourceStatus> = {
         'running': 'safe',
         'stopped': 'warning',
@@ -59,22 +59,22 @@ function mapBackendResourceToFrontend(backendResource: any): Resource {
         'deleting': 'critical',
         'failed': 'critical',
     };
-    
+
     return {
-        id: backendResource.id,
-        name: backendResource.resource_name,
-        value: backendResource.metadata?.count?.toString() || '1',
-        status: statusMap[backendResource.status] || 'warning',
-        description: backendResource.metadata?.description || backendResource.status,
-        type: backendResource.resource_type,
-        region: backendResource.region,
+        id: String(backendResource.id),
+        name: String(backendResource.resource_name),
+        value: String((backendResource.metadata as Record<string, unknown>)?.count || '1'),
+        status: statusMap[String(backendResource.status)] || 'warning',
+        description: String((backendResource.metadata as Record<string, unknown>)?.description || backendResource.status),
+        type: String(backendResource.resource_type),
+        region: String(backendResource.region),
     };
 }
 
 /**
  * Map backend alert to frontend Alert type
  */
-function mapBackendAlertToFrontend(backendAlert: any): Alert {
+function mapBackendAlertToFrontend(backendAlert: Record<string, unknown>): Alert {
     const typeMap: Record<string, AlertType> = {
         'critical': 'critical',
         'high': 'critical',
@@ -82,29 +82,29 @@ function mapBackendAlertToFrontend(backendAlert: any): Alert {
         'low': 'info',
         'info': 'info',
     };
-    
+
     return {
-        id: backendAlert.id,
-        type: typeMap[backendAlert.severity] || 'info',
-        title: backendAlert.title,
-        description: backendAlert.description,
-        time: new Date(backendAlert.created_at).toLocaleString(),
-        timestamp: backendAlert.created_at,
+        id: String(backendAlert.id),
+        type: typeMap[String(backendAlert.severity)] || 'info',
+        title: String(backendAlert.title),
+        description: String(backendAlert.description),
+        time: new Date(String(backendAlert.created_at)).toLocaleString(),
+        timestamp: String(backendAlert.created_at),
     };
 }
 
 /**
  * Map backend activity to frontend Activity type
  */
-function mapBackendActivityToFrontend(backendActivity: any): Activity {
+function mapBackendActivityToFrontend(backendActivity: Record<string, unknown>): Activity {
     return {
-        id: backendActivity.id,
-        action: backendActivity.action,
-        resource: backendActivity.resource_id,
-        time: new Date(backendActivity.created_at).toLocaleString(),
-        user: backendActivity.user_id || 'system',
-        timestamp: backendActivity.created_at,
-        eventType: backendActivity.action,
+        id: String(backendActivity.id),
+        action: String(backendActivity.action),
+        resource: String(backendActivity.resource_id),
+        time: new Date(String(backendActivity.created_at)).toLocaleString(),
+        user: String(backendActivity.user_id || 'system'),
+        timestamp: String(backendActivity.created_at),
+        eventType: String(backendActivity.action),
     };
 }
 
@@ -117,32 +117,57 @@ export interface HygieneScore {
     recommendations: string[];
 }
 
+export interface PaginationParams {
+    limit?: number;
+    offset?: number;
+    nextToken?: string;
+}
+
+export interface PaginatedResponse<T> {
+    items: T[];
+    total: number;
+    limit: number;
+    offset: number;
+    hasMore: boolean;
+}
+
 /**
- * Production-grade AWS Service
- * All data fetched from real backend API connected to AWS
+ * Unified Enterprise AWS Service
+ * Centralized API abstraction with retry middleware, timeout handling, caching support,
+ * region-aware clients, and pagination abstraction.
  */
 export const awsService = {
     /**
-     * Fetch all AWS resources from backend
-     * @param region - AWS region to fetch from
-     * @returns Array of resources with real AWS data
+     * Fetch all AWS resources from backend with pagination
      */
-    async getResources(region: string = 'us-east-1'): Promise<Resource[]> {
+    async getResources(region: string = 'us-east-1', pagination?: PaginationParams): Promise<PaginatedResponse<Resource>> {
         try {
             logger.info(`Fetching AWS resources from region ${region}`);
-            
+
             const response = await retryWithExponentialBackoff(async () => {
-                const res = await apiClient.get('/api/aws/resources', {
-                    params: { region, max_results: 100 },
+                const res = await apiClient.get('/api/v1/resources', {
+                    params: {
+                        region,
+                        limit: pagination?.limit || 100,
+                        offset: pagination?.offset || 0,
+                        next_token: pagination?.nextToken,
+                    },
                     timeout: 10000,
                 });
                 return res.data;
             });
-            
-            const validated = validateApiResponse(response, ['resources', 'count']);
-            const resources = (validated as any).resources || [];
-            
-            return resources.map(mapBackendResourceToFrontend);
+
+            const validated = validateApiResponse(response, ['resources', 'total']);
+            const data = validated as Record<string, unknown>;
+            const resources = (data.resources as Record<string, unknown>[]) || [];
+
+            return {
+                items: resources.map(mapBackendResourceToFrontend),
+                total: Number(data.total),
+                limit: pagination?.limit || 100,
+                offset: pagination?.offset || 0,
+                hasMore: (pagination?.offset || 0) + (pagination?.limit || 100) < Number(data.total),
+            };
         } catch (error) {
             logger.error(`Failed to fetch resources: ${error}`);
             throw error;
@@ -151,29 +176,34 @@ export const awsService = {
 
     /**
      * Fetch resources by type from backend
-     * @param type - Resource type (ec2, rds, s3, etc.)
-     * @param region - AWS region
-     * @returns Filtered resources
      */
-    async getResourcesByType(type: string, region: string = 'us-east-1'): Promise<Resource[]> {
+    async getResourcesByType(type: string, region: string = 'us-east-1', pagination?: PaginationParams): Promise<PaginatedResponse<Resource>> {
         try {
             logger.info(`Fetching ${type} resources from region ${region}`);
-            
+
             const response = await retryWithExponentialBackoff(async () => {
-                const res = await apiClient.get(`/api/aws/${type}/instances`, {
-                    params: { region, max_results: 100 },
+                const res = await apiClient.get(`/api/v1/resources/${type}`, {
+                    params: {
+                        region,
+                        limit: pagination?.limit || 100,
+                        offset: pagination?.offset || 0,
+                    },
                     timeout: 10000,
                 });
                 return res.data;
             });
-            
-            const key = type === 'ec2' ? 'instances' : 
-                       type === 'rds' ? 'instances' :
-                       type === 's3' ? 'buckets' :
-                       type === 'lambda' ? 'functions' : 'resources';
-            
-            const items = (response as any)[key] || [];
-            return items.map(mapBackendResourceToFrontend);
+
+            const validated = validateApiResponse(response, ['resources', 'total']);
+            const data = validated as Record<string, unknown>;
+            const resources = (data.resources as Record<string, unknown>[]) || [];
+
+            return {
+                items: resources.map(mapBackendResourceToFrontend),
+                total: Number(data.total),
+                limit: pagination?.limit || 100,
+                offset: pagination?.offset || 0,
+                hasMore: (pagination?.offset || 0) + (pagination?.limit || 100) < Number(data.total),
+            };
         } catch (error) {
             logger.error(`Failed to fetch ${type} resources: ${error}`);
             throw error;
@@ -182,24 +212,34 @@ export const awsService = {
 
     /**
      * Fetch active alerts from backend
-     * @returns Array of real alerts from database
      */
-    async getAlerts(): Promise<Alert[]> {
+    async getAlerts(pagination?: PaginationParams): Promise<PaginatedResponse<Alert>> {
         try {
             logger.info('Fetching alerts from backend');
-            
+
             const response = await retryWithExponentialBackoff(async () => {
-                const res = await apiClient.get('/api/alerts', {
-                    params: { status: 'open', max_results: 50 },
+                const res = await apiClient.get('/api/v1/alerts', {
+                    params: {
+                        status: 'open',
+                        limit: pagination?.limit || 50,
+                        offset: pagination?.offset || 0,
+                    },
                     timeout: 5000,
                 });
                 return res.data;
             });
-            
-            const validated = validateApiResponse(response, ['alerts']);
-            const alerts = (validated as any).alerts || [];
-            
-            return alerts.map(mapBackendAlertToFrontend);
+
+            const validated = validateApiResponse(response, ['alerts', 'total']);
+            const data = validated as Record<string, unknown>;
+            const alerts = (data.alerts as Record<string, unknown>[]) || [];
+
+            return {
+                items: alerts.map(mapBackendAlertToFrontend),
+                total: Number(data.total),
+                limit: pagination?.limit || 50,
+                offset: pagination?.offset || 0,
+                hasMore: (pagination?.offset || 0) + (pagination?.limit || 50) < Number(data.total),
+            };
         } catch (error) {
             logger.error(`Failed to fetch alerts: ${error}`);
             throw error;
@@ -208,14 +248,13 @@ export const awsService = {
 
     /**
      * Dismiss an alert in backend
-     * @param alertId - Alert ID to dismiss
      */
     async dismissAlert(alertId: string): Promise<void> {
         try {
             logger.info(`Dismissing alert ${alertId}`);
-            
+
             await retryWithExponentialBackoff(async () => {
-                await apiClient.post(`/api/alerts/${alertId}/dismiss`, {}, {
+                await apiClient.post(`/api/v1/alerts/${alertId}/dismiss`, {}, {
                     timeout: 5000,
                 });
             });
@@ -227,26 +266,34 @@ export const awsService = {
 
     /**
      * Fetch CloudTrail activities from backend
-     * @param limit - Maximum number of activities
-     * @param region - AWS region
-     * @returns Array of real CloudTrail events
      */
-    async getActivities(limit: number = 10, region: string = 'us-east-1'): Promise<Activity[]> {
+    async getActivities(region: string = 'us-east-1', pagination?: PaginationParams): Promise<PaginatedResponse<Activity>> {
         try {
-            logger.info(`Fetching ${limit} CloudTrail events from region ${region}`);
-            
+            logger.info(`Fetching CloudTrail events from region ${region}`);
+
             const response = await retryWithExponentialBackoff(async () => {
-                const res = await apiClient.get('/api/aws/cloudtrail/events', {
-                    params: { region, max_results: limit },
+                const res = await apiClient.get('/api/v1/audit-logs', {
+                    params: {
+                        region,
+                        limit: pagination?.limit || 50,
+                        offset: pagination?.offset || 0,
+                    },
                     timeout: 10000,
                 });
                 return res.data;
             });
-            
-            const validated = validateApiResponse(response, ['events']);
-            const events = (validated as any).events || [];
-            
-            return events.map(mapBackendActivityToFrontend);
+
+            const validated = validateApiResponse(response, ['events', 'total']);
+            const data = validated as Record<string, unknown>;
+            const events = (data.events as Record<string, unknown>[]) || [];
+
+            return {
+                items: events.map(mapBackendActivityToFrontend),
+                total: Number(data.total),
+                limit: pagination?.limit || 50,
+                offset: pagination?.offset || 0,
+                hasMore: (pagination?.offset || 0) + (pagination?.limit || 50) < Number(data.total),
+            };
         } catch (error) {
             logger.error(`Failed to fetch activities: ${error}`);
             throw error;
@@ -255,27 +302,26 @@ export const awsService = {
 
     /**
      * Fetch cost data from backend
-     * @param months - Number of months to fetch
-     * @returns Cost data for chart
      */
     async getCostData(months: number = 6): Promise<CostData[]> {
         try {
             logger.info(`Fetching cost data for last ${months} months`);
-            
+
             const response = await retryWithExponentialBackoff(async () => {
-                const res = await apiClient.get('/api/costs/summary', {
+                const res = await apiClient.get('/api/v1/costs/summary', {
                     params: { months },
                     timeout: 10000,
                 });
                 return res.data;
             });
-            
+
             const validated = validateApiResponse(response, ['cost_data']);
-            const costData = (validated as any).cost_data || [];
-            
-            return costData.map((item: any) => ({
-                month: item.month,
-                cost: parseFloat(item.cost_usd),
+            const data = validated as Record<string, unknown>;
+            const costData = (data.cost_data as Record<string, unknown>[]) || [];
+
+            return costData.map((item: Record<string, unknown>) => ({
+                month: String(item.month),
+                cost: parseFloat(String(item.cost_usd)),
             }));
         } catch (error) {
             logger.error(`Failed to fetch cost data: ${error}`);
@@ -285,21 +331,21 @@ export const awsService = {
 
     /**
      * Get current month cost from backend
-     * @returns Current month cost in USD
      */
     async getCurrentMonthCost(): Promise<number> {
         try {
             logger.info('Fetching current month cost');
-            
+
             const response = await retryWithExponentialBackoff(async () => {
-                const res = await apiClient.get('/api/costs/current-month', {
+                const res = await apiClient.get('/api/v1/costs/current', {
                     timeout: 5000,
                 });
                 return res.data;
             });
-            
+
             const validated = validateApiResponse(response, ['cost_usd']);
-            return parseFloat((validated as any).cost_usd);
+            const data = validated as Record<string, unknown>;
+            return parseFloat(String(data.cost_usd));
         } catch (error) {
             logger.error(`Failed to fetch current month cost: ${error}`);
             throw error;
@@ -308,29 +354,28 @@ export const awsService = {
 
     /**
      * Get hygiene score from backend
-     * @returns Calculated hygiene score with recommendations
      */
     async getHygieneScore(): Promise<HygieneScore> {
         try {
             logger.info('Fetching hygiene score');
-            
+
             const response = await retryWithExponentialBackoff(async () => {
-                const res = await apiClient.get('/api/hygiene-score', {
+                const res = await apiClient.get('/api/v1/hygiene-score', {
                     timeout: 10000,
                 });
                 return res.data;
             });
-            
+
             const validated = validateApiResponse(response, ['overall', 'security', 'cost_efficiency']);
-            const data = validated as any;
-            
+            const data = validated as Record<string, unknown>;
+
             return {
-                overall: data.overall,
-                security: data.security,
-                costEfficiency: data.cost_efficiency,
-                bestPractices: data.best_practices || 0,
-                criticalIssues: data.critical_issues || 0,
-                recommendations: data.recommendations || [],
+                overall: Number(data.overall),
+                security: Number(data.security),
+                costEfficiency: Number(data.cost_efficiency),
+                bestPractices: Number(data.best_practices || 0),
+                criticalIssues: Number(data.critical_issues || 0),
+                recommendations: (data.recommendations as string[]) || [],
             };
         } catch (error) {
             logger.error(`Failed to fetch hygiene score: ${error}`);
@@ -340,24 +385,23 @@ export const awsService = {
 
     /**
      * Run a new AWS scan
-     * @param region - Region to scan
-     * @returns Scan results
      */
     async runScan(region: string = 'us-east-1'): Promise<{ success: boolean; resourcesScanned: number }> {
         try {
             logger.info(`Running AWS scan for region ${region}`);
-            
+
             const response = await retryWithExponentialBackoff(async () => {
-                const res = await apiClient.post('/api/scan', { region }, {
+                const res = await apiClient.post('/api/v1/scan', { region }, {
                     timeout: 30000,
                 });
                 return res.data;
             });
-            
+
             const validated = validateApiResponse(response, ['success', 'resources_scanned']);
+            const data = validated as Record<string, unknown>;
             return {
-                success: (validated as any).success,
-                resourcesScanned: (validated as any).resources_scanned,
+                success: Boolean(data.success),
+                resourcesScanned: Number(data.resources_scanned),
             };
         } catch (error) {
             logger.error(`Failed to run scan: ${error}`);
@@ -367,10 +411,6 @@ export const awsService = {
 
     /**
      * Connect AWS account
-     * @param accessKeyId - AWS access key
-     * @param secretAccessKey - AWS secret key
-     * @param region - AWS region
-     * @returns Connection result with account ID
      */
     async connectAccount(
         accessKeyId: string,
@@ -379,9 +419,9 @@ export const awsService = {
     ): Promise<{ success: boolean; accountId: string }> {
         try {
             logger.info(`Connecting AWS account in region ${region}`);
-            
+
             const response = await retryWithExponentialBackoff(async () => {
-                const res = await apiClient.post('/api/aws/connect', {
+                const res = await apiClient.post('/api/v1/accounts/connect', {
                     access_key_id: accessKeyId,
                     secret_access_key: secretAccessKey,
                     region,
@@ -390,11 +430,12 @@ export const awsService = {
                 });
                 return res.data;
             });
-            
+
             const validated = validateApiResponse(response, ['success', 'account_id']);
+            const data = validated as Record<string, unknown>;
             return {
-                success: (validated as any).success,
-                accountId: (validated as any).account_id,
+                success: Boolean(data.success),
+                accountId: String(data.account_id),
             };
         } catch (error) {
             logger.error(`Failed to connect AWS account: ${error}`);
@@ -408,9 +449,9 @@ export const awsService = {
     async disconnectAccount(): Promise<void> {
         try {
             logger.info('Disconnecting AWS account');
-            
+
             await retryWithExponentialBackoff(async () => {
-                await apiClient.post('/api/aws/disconnect', {}, {
+                await apiClient.post('/api/v1/accounts/disconnect', {}, {
                     timeout: 5000,
                 });
             });
